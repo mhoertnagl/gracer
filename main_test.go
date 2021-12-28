@@ -52,6 +52,20 @@ func TestNegatingATuple(t *testing.T) {
 	assertTupleEqual(t, a, e)
 }
 
+func TestMultiplyingATupleByAScalar(t *testing.T) {
+	e := NewTuple(3.5, -7, 10.5, -14)
+	x := NewTuple(1, -2, 3, -4)
+	a := x.Mul(3.5)
+	assertTupleEqual(t, a, e)
+}
+
+func TestDividingATupleByAScalar(t *testing.T) {
+	e := NewTuple(0.5, -1, 1.5, -2)
+	x := NewTuple(1, -2, 3, -4)
+	a := x.Div(2)
+	assertTupleEqual(t, a, e)
+}
+
 const float64EqualityThreshold = 1e-6
 
 func floatEqual(a, b float64) bool {

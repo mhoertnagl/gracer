@@ -37,6 +37,14 @@ func (a *Tuple) Negate() *Tuple {
 	return NewTuple(-a.x, -a.y, -a.z, -a.w)
 }
 
+func (a *Tuple) Mul(f float64) *Tuple {
+	return NewTuple(f*a.x, f*a.y, f*a.z, f*a.w)
+}
+
+func (a *Tuple) Div(d float64) *Tuple {
+	return NewTuple(a.x/d, a.y/d, a.z/d, a.w/d)
+}
+
 func main() {
 	fmt.Println("0")
 }
