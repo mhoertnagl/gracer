@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Tuple struct {
 	x float64
@@ -43,6 +46,23 @@ func (a *Tuple) Mul(f float64) *Tuple {
 
 func (a *Tuple) Div(d float64) *Tuple {
 	return NewTuple(a.x/d, a.y/d, a.z/d, a.w/d)
+}
+
+func (a *Tuple) Dot(b *Tuple) float64 {
+	return a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w
+}
+
+func (a *Tuple) Magnitude() float64 {
+	return math.Sqrt(a.Dot(a))
+}
+
+func (a *Tuple) Normalize() *Tuple {
+	n := a.Magnitude()
+	return NewTuple(a.x/n, a.y/n, a.z/n, a.w/n)
+}
+
+func (a *Tuple) Cross(b *Tuple) *Tuple {
+	return NewVector(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x)
 }
 
 func main() {

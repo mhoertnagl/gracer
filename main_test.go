@@ -66,10 +66,89 @@ func TestDividingATupleByAScalar(t *testing.T) {
 	assertTupleEqual(t, a, e)
 }
 
-const float64EqualityThreshold = 1e-6
+func TestDotProduct(t *testing.T) {
+	e := 20.0
+	x := NewVector(1, 2, 3)
+	y := NewVector(2, 3, 4)
+	a := x.Dot(y)
+	assertFloatEqual(t, a, e)
+}
+
+func TestMagnitudeOfVector100(t *testing.T) {
+	e := 1.0
+	x := NewVector(1, 0, 0)
+	a := x.Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestMagnitudeOfVector010(t *testing.T) {
+	e := 1.0
+	x := NewVector(0, 1, 0)
+	a := x.Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestMagnitudeOfVector001(t *testing.T) {
+	e := 1.0
+	x := NewVector(0, 0, 1)
+	a := x.Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestMagnitudeOfVector123(t *testing.T) {
+	e := math.Sqrt(14)
+	x := NewVector(1, 2, 3)
+	a := x.Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestMagnitudeOfVectorNegative123(t *testing.T) {
+	e := math.Sqrt(14)
+	x := NewVector(-1, -2, -3)
+	a := x.Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestNormalizeVector400(t *testing.T) {
+	e := NewVector(1, 0, 0)
+	x := NewVector(4, 0, 0)
+	a := x.Normalize()
+	assertTupleEqual(t, a, e)
+}
+
+func TestNormalizeVector123(t *testing.T) {
+	n := math.Sqrt(14)
+	e := NewVector(1/n, 2/n, 3/n)
+	x := NewVector(1, 2, 3)
+	a := x.Normalize()
+	assertTupleEqual(t, a, e)
+}
+
+func TestMagnitudeOfNormalizedVector123(t *testing.T) {
+	e := 1.0
+	x := NewVector(1, 2, 3)
+	a := x.Normalize().Magnitude()
+	assertFloatEqual(t, a, e)
+}
+
+func TestCrossProductXY(t *testing.T) {
+	e := NewVector(-1, 2, -1)
+	x := NewVector(1, 2, 3)
+	y := NewVector(2, 3, 4)
+	a := x.Cross(y)
+	assertTupleEqual(t, a, e)
+}
+
+func TestCrossProductYX(t *testing.T) {
+	e := NewVector(1, -2, 1)
+	x := NewVector(1, 2, 3)
+	y := NewVector(2, 3, 4)
+	a := y.Cross(x)
+	assertTupleEqual(t, a, e)
+}
 
 func floatEqual(a, b float64) bool {
-	return math.Abs(a-b) <= float64EqualityThreshold
+	return math.Abs(a-b) <= 1e-6
 }
 
 func tupleEqual(a, b *Tuple) bool {
@@ -82,6 +161,13 @@ func tupleEqual(a, b *Tuple) bool {
 func assertTupleEqual(t *testing.T, a, e *Tuple) {
 	t.Helper()
 	if !tupleEqual(a, e) {
-		t.Errorf("Sum was incorrect, \n got: %v \n want: %v", a, e)
+		t.Errorf("Tuple was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
+func assertFloatEqual(t *testing.T, a, e float64) {
+	t.Helper()
+	if !floatEqual(a, e) {
+		t.Errorf("Float was incorrect, \n got: %v \n want: %v", a, e)
 	}
 }
