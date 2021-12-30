@@ -16,59 +16,6 @@ type Tuple struct {
 	w float64
 }
 
-// func (a *Tuple) String() string {
-// 	return fmt.Sprintf("Tuple(%f, %f, %f, %f)", a.x, a.y, a.z, a.w)
-// }
-
-// func tuple(x, y, z, w float64) *Tuple {
-// 	return &Tuple{x, y, z, w}
-// }
-
-// func vector(x, y, z float64) *Tuple {
-// 	return tuple(x, y, z, 0)
-// }
-
-// func point(x, y, z float64) *Tuple {
-// 	return tuple(x, y, z, 1)
-// }
-
-// func add(a, b *Tuple) *Tuple {
-// 	return tuple(a.x+b.x, a.y+b.y, a.z+b.z, a.w+b.w)
-// }
-
-// func sub(a, b *Tuple) *Tuple {
-// 	return tuple(a.x-b.x, a.y-b.y, a.z-b.z, a.w-b.w)
-// }
-
-// func negate(a *Tuple) *Tuple {
-// 	return tuple(-a.x, -a.y, -a.z, -a.w)
-// }
-
-// func mul(f float64, a *Tuple) *Tuple {
-// 	return tuple(f*a.x, f*a.y, f*a.z, f*a.w)
-// }
-
-// func div(a *Tuple, d float64) *Tuple {
-// 	return tuple(a.x/d, a.y/d, a.z/d, a.w/d)
-// }
-
-// func dot(a, b *Tuple) float64 {
-// 	return a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w
-// }
-
-// func magnitude(a *Tuple) float64 {
-// 	return math.Sqrt(dot(a, a))
-// }
-
-// func normalize(a *Tuple) *Tuple {
-// 	n := magnitude(a)
-// 	return tuple(a.x/n, a.y/n, a.z/n, a.w/n)
-// }
-
-// func cross(a, b *Tuple) *Tuple {
-// 	return vector(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x)
-// }
-
 func NewTuple(x, y, z, w float64) *Tuple {
 	return &Tuple{x, y, z, w}
 }
@@ -122,14 +69,70 @@ func (a *Tuple) Cross(b *Tuple) *Tuple {
 	return NewVector(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x)
 }
 
-func main() {
-	m := image.NewRGBA(image.Rect(0, 0, 300, 250))
-	m.Set(150, 125, color.RGBA{255, 255, 255, 255})
-	outFile, err := os.Create("out.jpg")
+type Color struct {
+	r float64
+	g float64
+	b float64
+}
+
+func NewColor(r, g, b float64) *Color {
+	return &Color{r, g, b}
+}
+
+func (a *Color) String() string {
+	return fmt.Sprintf("Color(%f, %f, %f)", a.r, a.g, a.b)
+}
+
+func (a *Color) Add(b *Color) *Color {
+	return NewColor(a.r+b.r, a.g+b.g, a.b+b.b)
+}
+
+func (a *Color) Sub(b *Color) *Color {
+	return NewColor(a.r-b.r, a.g-b.g, a.b-b.b)
+}
+
+func (a *Color) Scale(f float64) *Color {
+	return NewColor(f*a.r, f*a.g, f*a.b)
+}
+
+func (a *Color) Mul(b *Color) *Color {
+	return NewColor(a.r*b.r, a.g*b.g, a.b*b.b)
+}
+
+func (c *Color) RGBA() color.RGBA {
+	return color.RGBA{cap(c.r), cap(c.g), cap(c.b), 255}
+}
+
+func cap(f float64) uint8 {
+	return uint8(math.Min(f, 1) * 255)
+}
+
+type Canvas struct {
+	m *image.RGBA
+}
+
+func NewCanvas(w, h int) *Canvas {
+	r := image.Rect(0, 0, w, h)
+	m := image.NewRGBA(r)
+	return &Canvas{m}
+}
+
+func (v *Canvas) Set(x, y int, c *Color) {
+	v.m.Set(x, y, c.RGBA())
+}
+
+func (v *Canvas) Write(fn string) {
+	outFile, err := os.Create(fn)
 	if err != nil {
 		panic(err)
 	}
 	defer outFile.Close()
-	jpeg.Encode(outFile, m, &jpeg.Options{Quality: 100})
+	jpeg.Encode(outFile, v.m, &jpeg.Options{Quality: 100})
+}
+
+func main() {
+	v := NewCanvas(300, 250)
+	v.Set(100, 100, NewColor(1, 1, 1))
+	v.Write("out.jpg")
 	fmt.Println("Done")
 }

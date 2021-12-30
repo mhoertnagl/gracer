@@ -14,148 +14,6 @@ func TestTupleString(t *testing.T) {
 	}
 }
 
-// func TestAddingTwoTuple(t *testing.T) {
-// 	e := tuple(1, 1, 6, 1)
-// 	x := tuple(3, -2, 5, 1)
-// 	y := tuple(-2, 3, 1, 0)
-// 	a := add(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestSubtractingTwoPoints(t *testing.T) {
-// 	e := vector(-2, -4, -6)
-// 	x := point(3, 2, 1)
-// 	y := point(5, 6, 7)
-// 	a := sub(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestSubtractingAVectorFromAPoint(t *testing.T) {
-// 	e := point(-2, -4, -6)
-// 	x := point(3, 2, 1)
-// 	y := vector(5, 6, 7)
-// 	a := sub(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestSubtractingTwoVectors(t *testing.T) {
-// 	e := vector(-2, -4, -6)
-// 	x := vector(3, 2, 1)
-// 	y := vector(5, 6, 7)
-// 	a := sub(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestSubtractingAVectorFromTheZeroVector(t *testing.T) {
-// 	e := vector(-1, 2, -3)
-// 	x := vector(0, 0, 0)
-// 	y := vector(1, -2, 3)
-// 	a := sub(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestNegatingATuple(t *testing.T) {
-// 	e := tuple(-1, 2, -3, 4)
-// 	x := tuple(1, -2, 3, -4)
-// 	a := negate(x)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestMultiplyingATupleByAScalar(t *testing.T) {
-// 	e := tuple(3.5, -7, 10.5, -14)
-// 	x := tuple(1, -2, 3, -4)
-// 	a := mul(3.5, x)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestDividingATupleByAScalar(t *testing.T) {
-// 	e := tuple(0.5, -1, 1.5, -2)
-// 	x := tuple(1, -2, 3, -4)
-// 	a := div(x, 2)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestDotProduct(t *testing.T) {
-// 	e := 20.0
-// 	x := vector(1, 2, 3)
-// 	y := vector(2, 3, 4)
-// 	a := dot(x, y)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfVector100(t *testing.T) {
-// 	e := 1.0
-// 	x := vector(1, 0, 0)
-// 	a := magnitude(x)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfVector010(t *testing.T) {
-// 	e := 1.0
-// 	x := vector(0, 1, 0)
-// 	a := magnitude(x)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfVector001(t *testing.T) {
-// 	e := 1.0
-// 	x := vector(0, 0, 1)
-// 	a := magnitude(x)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfVector123(t *testing.T) {
-// 	e := math.Sqrt(14)
-// 	x := vector(1, 2, 3)
-// 	a := magnitude(x)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfVectorNegative123(t *testing.T) {
-// 	e := math.Sqrt(14)
-// 	x := vector(-1, -2, -3)
-// 	a := magnitude(x)
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestNormalizeVector400(t *testing.T) {
-// 	e := vector(1, 0, 0)
-// 	x := vector(4, 0, 0)
-// 	a := normalize(x)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestNormalizeVector123(t *testing.T) {
-// 	n := math.Sqrt(14)
-// 	e := vector(1/n, 2/n, 3/n)
-// 	x := vector(1, 2, 3)
-// 	a := normalize(x)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestMagnitudeOfNormalizedVector123(t *testing.T) {
-// 	e := 1.0
-// 	x := vector(1, 2, 3)
-// 	a := magnitude(normalize(x))
-// 	assertFloatEqual(t, a, e)
-// }
-
-// func TestCrossProductXY(t *testing.T) {
-// 	e := vector(-1, 2, -1)
-// 	x := vector(1, 2, 3)
-// 	y := vector(2, 3, 4)
-// 	a := cross(x, y)
-// 	assertTupleEqual(t, a, e)
-// }
-
-// func TestCrossProductYX(t *testing.T) {
-// 	e := vector(1, -2, 1)
-// 	x := vector(1, 2, 3)
-// 	y := vector(2, 3, 4)
-// 	a := cross(y, x)
-// 	assertTupleEqual(t, a, e)
-// }
-
 func TestAddingTwoTuple(t *testing.T) {
 	e := NewTuple(1, 1, 6, 1)
 	x := NewTuple(3, -2, 5, 1)
@@ -298,6 +156,37 @@ func TestCrossProductYX(t *testing.T) {
 	assertTupleEqual(t, a, e)
 }
 
+func TestAddingColors(t *testing.T) {
+	e := NewColor(1.6, 0.7, 1.0)
+	x := NewColor(0.9, 0.6, 0.75)
+	y := NewColor(0.7, 0.1, 0.25)
+	a := x.Add(y)
+	assertColorEqual(t, a, e)
+}
+
+func TestSubtractingColors(t *testing.T) {
+	e := NewColor(0.2, 0.5, 0.5)
+	x := NewColor(0.9, 0.6, 0.75)
+	y := NewColor(0.7, 0.1, 0.25)
+	a := x.Sub(y)
+	assertColorEqual(t, a, e)
+}
+
+func TestScaleColors(t *testing.T) {
+	e := NewColor(0.4, 0.6, 0.8)
+	x := NewColor(0.2, 0.3, 0.4)
+	a := x.Scale(2)
+	assertColorEqual(t, a, e)
+}
+
+func TestMultiplyingColors(t *testing.T) {
+	e := NewColor(0.9, 0.2, 0.04)
+	x := NewColor(1.0, 0.2, 0.4)
+	y := NewColor(0.9, 1.0, 0.1)
+	a := x.Mul(y)
+	assertColorEqual(t, a, e)
+}
+
 func floatEqual(a, b float64) bool {
 	return math.Abs(a-b) <= 1e-6
 }
@@ -307,6 +196,12 @@ func tupleEqual(a, b *Tuple) bool {
 		floatEqual(a.y, b.y) &&
 		floatEqual(a.z, b.z) &&
 		floatEqual(a.w, b.w)
+}
+
+func colorEqual(a, b *Color) bool {
+	return floatEqual(a.r, b.r) &&
+		floatEqual(a.g, b.g) &&
+		floatEqual(a.b, b.b)
 }
 
 func assertTupleEqual(t *testing.T, a, e *Tuple) {
@@ -320,5 +215,12 @@ func assertFloatEqual(t *testing.T, a, e float64) {
 	t.Helper()
 	if !floatEqual(a, e) {
 		t.Errorf("Float was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
+func assertColorEqual(t *testing.T, a, e *Color) {
+	t.Helper()
+	if !colorEqual(a, e) {
+		t.Errorf("Color was incorrect, \n got: %v \n want: %v", a, e)
 	}
 }
