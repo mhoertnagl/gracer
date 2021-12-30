@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+func TestTupleString(t *testing.T) {
+	e := "Tuple(1.000000, 2.000000, 3.000000, 0.000000)"
+	x := NewTuple(1, 2, 3, 0)
+	a := x.String()
+	if a != e {
+		t.Errorf("Tuple was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
 func TestAddingTwoTuple(t *testing.T) {
 	e := NewTuple(1, 1, 6, 1)
 	x := NewTuple(3, -2, 5, 1)
