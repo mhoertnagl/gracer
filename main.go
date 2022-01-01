@@ -135,14 +135,18 @@ type Matrix struct {
 	m [][]float64
 }
 
-var Id4 = NewMatrix([][]float64{
-	{1, 0, 0, 0},
-	{0, 1, 0, 0},
-	{0, 0, 1, 0},
-	{0, 0, 0, 1},
-})
+var Id4 = NewMatrix(
+	Row(1, 0, 0, 0),
+	Row(0, 1, 0, 0),
+	Row(0, 0, 1, 0),
+	Row(0, 0, 0, 1),
+)
 
-func NewMatrix(m [][]float64) *Matrix {
+func Row(rs ...float64) []float64 {
+	return rs
+}
+
+func NewMatrix(m ...[]float64) *Matrix {
 	sz := len(m)
 	for _, row := range m {
 		if len(row) != sz {

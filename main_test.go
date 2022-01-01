@@ -188,70 +188,70 @@ func TestMultiplyingColors(t *testing.T) {
 }
 
 func TestMatrixesEqual(t *testing.T) {
-	e := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 10, 11, 12},
-		{13, 14, 15, 16},
-	})
-	a := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 10, 11, 12},
-		{13, 14, 15, 16},
-	})
+	e := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 10, 11, 12),
+		Row(13, 14, 15, 16),
+	)
+	a := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 10, 11, 12),
+		Row(13, 14, 15, 16),
+	)
 	assertMatrixEqual(t, a, e)
 }
 
 func TestMultiplyMatrices(t *testing.T) {
-	e := NewMatrix([][]float64{
-		{20, 22, 50, 48},
-		{44, 54, 114, 108},
-		{40, 58, 110, 102},
-		{16, 26, 46, 42},
-	})
-	x := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 8, 7, 6},
-		{5, 4, 3, 2},
-	})
-	y := NewMatrix([][]float64{
-		{-2, 1, 2, 3},
-		{3, 2, 1, -1},
-		{4, 3, 6, 5},
-		{1, 2, 7, 8},
-	})
+	e := NewMatrix(
+		Row(20, 22, 50, 48),
+		Row(44, 54, 114, 108),
+		Row(40, 58, 110, 102),
+		Row(16, 26, 46, 42),
+	)
+	x := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 8, 7, 6),
+		Row(5, 4, 3, 2),
+	)
+	y := NewMatrix(
+		Row(-2, 1, 2, 3),
+		Row(3, 2, 1, -1),
+		Row(4, 3, 6, 5),
+		Row(1, 2, 7, 8),
+	)
 	a := x.MatMul(y)
 	assertMatrixEqual(t, a, e)
 }
 
 func TestMultiplyMatrixAndTuple(t *testing.T) {
 	e := NewTuple(18, 24, 33, 1)
-	x := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{2, 4, 4, 2},
-		{8, 6, 4, 1},
-		{0, 0, 0, 1},
-	})
+	x := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(2, 4, 4, 2),
+		Row(8, 6, 4, 1),
+		Row(0, 0, 0, 1),
+	)
 	y := NewTuple(1, 2, 3, 1)
 	a := x.TupMul(y)
 	assertTupleEqual(t, a, e)
 }
 
 func TestMultiplyMatrixWithIdentity(t *testing.T) {
-	e := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 8, 7, 6},
-		{5, 4, 3, 2},
-	})
-	x := NewMatrix([][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 8, 7, 6},
-		{5, 4, 3, 2},
-	})
+	e := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 8, 7, 6),
+		Row(5, 4, 3, 2),
+	)
+	x := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 8, 7, 6),
+		Row(5, 4, 3, 2),
+	)
 	a := x.MatMul(Id4)
 	assertMatrixEqual(t, a, e)
 }
