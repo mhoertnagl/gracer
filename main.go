@@ -7,6 +7,7 @@ import (
 	"image/jpeg"
 	"math"
 	"os"
+	"strings"
 )
 
 type Tuple struct {
@@ -79,8 +80,8 @@ func NewColor(r, g, b float64) *Color {
 	return &Color{r, g, b}
 }
 
-func (a *Color) String() string {
-	return fmt.Sprintf("Color(%f, %f, %f)", a.r, a.g, a.b)
+func (c *Color) String() string {
+	return fmt.Sprintf("Color(%f, %f, %f)", c.r, c.g, c.b)
 }
 
 func (a *Color) Add(b *Color) *Color {
@@ -91,8 +92,8 @@ func (a *Color) Sub(b *Color) *Color {
 	return NewColor(a.r-b.r, a.g-b.g, a.b-b.b)
 }
 
-func (a *Color) Scale(f float64) *Color {
-	return NewColor(f*a.r, f*a.g, f*a.b)
+func (c *Color) Scale(f float64) *Color {
+	return NewColor(f*c.r, f*c.g, f*c.b)
 }
 
 func (a *Color) Mul(b *Color) *Color {
@@ -128,6 +129,79 @@ func (v *Canvas) Write(fn string) {
 	}
 	defer outFile.Close()
 	jpeg.Encode(outFile, v.m, &jpeg.Options{Quality: 100})
+}
+
+type Matrix struct {
+	m [][]float64
+}
+
+var Id4 = NewMatrix([][]float64{
+	{1, 0, 0, 0},
+	{0, 1, 0, 0},
+	{0, 0, 1, 0},
+	{0, 0, 0, 1},
+})
+
+func NewMatrix(m [][]float64) *Matrix {
+	sz := len(m)
+	for _, row := range m {
+		if len(row) != sz {
+			panic(fmt.Sprintf("Matrix [%d %d] is not square", sz, len(row)))
+		}
+	}
+	return &Matrix{m}
+}
+
+func NewEmptyMatrix(size int) *Matrix {
+	m := make([][]float64, size)
+	for i := range m {
+		m[i] = make([]float64, size)
+	}
+	return &Matrix{m}
+}
+
+func (m *Matrix) String() string {
+	var b strings.Builder
+	sz := len(m.m)
+	b.WriteString("Matrix(")
+	for r := 0; r < sz; r++ {
+		b.WriteString("\n  ")
+		for c := 0; c < sz; c++ {
+			v := m.m[r][c]
+			b.WriteString(fmt.Sprintf("%8.6f  ", v))
+		}
+	}
+	b.WriteString("\n)")
+	return b.String()
+}
+
+func (a *Matrix) MatMul(b *Matrix) *Matrix {
+	sza := len(a.m)
+	szb := len(b.m)
+	if sza != szb {
+		panic(fmt.Sprintf("Matrix sizes mismatch [%d] vs. [%d]", sza, szb))
+	}
+	m := NewEmptyMatrix(sza)
+	for r := 0; r < sza; r++ {
+		for c := 0; c < sza; c++ {
+			for l := 0; l < sza; l++ {
+				m.m[r][c] += a.m[r][l] * b.m[l][c]
+			}
+		}
+	}
+	return m
+}
+
+func (a *Matrix) TupMul(b *Tuple) *Tuple {
+	sza := len(a.m)
+	if sza != 4 {
+		panic(fmt.Sprintf("Matrix sizes mismatch [%d] vs. [%d]", sza, 4))
+	}
+	x := a.m[0][0]*b.x + a.m[0][1]*b.y + a.m[0][2]*b.z + a.m[0][3]*b.w
+	y := a.m[1][0]*b.x + a.m[1][1]*b.y + a.m[1][2]*b.z + a.m[1][3]*b.w
+	z := a.m[2][0]*b.x + a.m[2][1]*b.y + a.m[2][2]*b.z + a.m[2][3]*b.w
+	w := a.m[3][0]*b.x + a.m[3][1]*b.y + a.m[3][2]*b.z + a.m[3][3]*b.w
+	return NewTuple(x, y, z, w)
 }
 
 func main() {

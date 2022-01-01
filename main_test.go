@@ -187,6 +187,82 @@ func TestMultiplyingColors(t *testing.T) {
 	assertColorEqual(t, a, e)
 }
 
+func TestMatrixesEqual(t *testing.T) {
+	e := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16},
+	})
+	a := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16},
+	})
+	assertMatrixEqual(t, a, e)
+}
+
+func TestMultiplyMatrices(t *testing.T) {
+	e := NewMatrix([][]float64{
+		{20, 22, 50, 48},
+		{44, 54, 114, 108},
+		{40, 58, 110, 102},
+		{16, 26, 46, 42},
+	})
+	x := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 8, 7, 6},
+		{5, 4, 3, 2},
+	})
+	y := NewMatrix([][]float64{
+		{-2, 1, 2, 3},
+		{3, 2, 1, -1},
+		{4, 3, 6, 5},
+		{1, 2, 7, 8},
+	})
+	a := x.MatMul(y)
+	assertMatrixEqual(t, a, e)
+}
+
+func TestMultiplyMatrixAndTuple(t *testing.T) {
+	e := NewTuple(18, 24, 33, 1)
+	x := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{2, 4, 4, 2},
+		{8, 6, 4, 1},
+		{0, 0, 0, 1},
+	})
+	y := NewTuple(1, 2, 3, 1)
+	a := x.TupMul(y)
+	assertTupleEqual(t, a, e)
+}
+
+func TestMultiplyMatrixWithIdentity(t *testing.T) {
+	e := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 8, 7, 6},
+		{5, 4, 3, 2},
+	})
+	x := NewMatrix([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 8, 7, 6},
+		{5, 4, 3, 2},
+	})
+	a := x.MatMul(Id4)
+	assertMatrixEqual(t, a, e)
+}
+
+func TestMultiplyIdentityWithTuple(t *testing.T) {
+	e := NewTuple(1, 2, 3, 1)
+	y := NewTuple(1, 2, 3, 1)
+	a := Id4.TupMul(y)
+	assertTupleEqual(t, a, e)
+}
+
 func floatEqual(a, b float64) bool {
 	return math.Abs(a-b) <= 1e-6
 }
@@ -204,11 +280,22 @@ func colorEqual(a, b *Color) bool {
 		floatEqual(a.b, b.b)
 }
 
-func assertTupleEqual(t *testing.T, a, e *Tuple) {
-	t.Helper()
-	if !tupleEqual(a, e) {
-		t.Errorf("Tuple was incorrect, \n got: %v \n want: %v", a, e)
+func matrixEqual(a, b *Matrix) bool {
+	sza := len(a.m)
+	szb := len(b.m)
+	if sza != szb {
+		return false
 	}
+	for r := 0; r < sza; r++ {
+		for c := 0; c < sza; c++ {
+			va := a.m[r][c]
+			vb := b.m[r][c]
+			if !floatEqual(va, vb) {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func assertFloatEqual(t *testing.T, a, e float64) {
@@ -218,9 +305,27 @@ func assertFloatEqual(t *testing.T, a, e float64) {
 	}
 }
 
+func assertTupleEqual(t *testing.T, a, e *Tuple) {
+	t.Helper()
+	if !tupleEqual(a, e) {
+		t.Errorf("Tuple was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
 func assertColorEqual(t *testing.T, a, e *Color) {
 	t.Helper()
 	if !colorEqual(a, e) {
 		t.Errorf("Color was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
+func assertMatrixEqual(t *testing.T, a, e *Matrix) {
+	t.Helper()
+	sza := len(a.m)
+	sze := len(e.m)
+	if sza != sze {
+		t.Errorf("Matrix size was incorrect, \n got: %v \n want: %v", sza, sze)
+	} else if !matrixEqual(a, e) {
+		t.Errorf("Matrix was incorrect, \n got: %v \n want: %v", a, e)
 	}
 }
