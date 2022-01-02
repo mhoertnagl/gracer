@@ -263,6 +263,29 @@ func TestMultiplyIdentityWithTuple(t *testing.T) {
 	assertTupleEqual(t, a, e)
 }
 
+func TestTransposeMatrix(t *testing.T) {
+	e := NewMatrix(
+		Row(1, 5, 9, 13),
+		Row(2, 6, 10, 14),
+		Row(3, 7, 11, 15),
+		Row(4, 8, 12, 16),
+	)
+	x := NewMatrix(
+		Row(1, 2, 3, 4),
+		Row(5, 6, 7, 8),
+		Row(9, 10, 11, 12),
+		Row(13, 14, 15, 16),
+	)
+	a := x.Transpose()
+	assertMatrixEqual(t, a, e)
+}
+
+func TestTransposeIdentity(t *testing.T) {
+	e := Id4
+	a := Id4.Transpose()
+	assertMatrixEqual(t, a, e)
+}
+
 func floatEqual(a, b float64) bool {
 	return math.Abs(a-b) <= 1e-6
 }

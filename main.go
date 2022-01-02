@@ -208,6 +208,17 @@ func (a *Matrix) TupMul(b *Tuple) *Tuple {
 	return NewTuple(x, y, z, w)
 }
 
+func (a *Matrix) Transpose() *Matrix {
+	sz := len(a.m)
+	m := NewEmptyMatrix(sz)
+	for r := 0; r < sz; r++ {
+		for c := 0; c < sz; c++ {
+			m.m[c][r] = a.m[r][c]
+		}
+	}
+	return m
+}
+
 func main() {
 	v := NewCanvas(300, 250)
 	v.Set(100, 100, NewColor(1, 1, 1))
