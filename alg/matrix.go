@@ -1,6 +1,6 @@
 package alg
 
-type matrix = []vector
+type matrix []vector
 
 // TODO: special type for square matrices.
 // type squareMatrix = []vector

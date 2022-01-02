@@ -62,8 +62,7 @@ func (a *Tuple) Magnitude() float64 {
 }
 
 func (a *Tuple) Normalize() *Tuple {
-	n := a.Magnitude()
-	return NewTuple(a.x/n, a.y/n, a.z/n, a.w/n)
+	return a.Div(a.Magnitude())
 }
 
 func (a *Tuple) Cross(b *Tuple) *Tuple {
