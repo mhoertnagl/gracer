@@ -286,7 +286,7 @@ func TestTransposeIdentity(t *testing.T) {
 	assertMatrixEqual(t, a, e)
 }
 
-func TestLUFactorize1(t *testing.T) {
+func TestLuDecompose(t *testing.T) {
 	el := NewMatrix(
 		Row(3.0, 0, 0),
 		Row(0.1, 7.003333, 0),
@@ -302,7 +302,7 @@ func TestLUFactorize1(t *testing.T) {
 		Row(0.1, 7, -0.3),
 		Row(0.3, -0.2, 10),
 	)
-	al, au := x.LUFactorize()
+	al, au := x.LuDecompose()
 	assertMatrixEqual(t, al, el)
 	assertMatrixEqual(t, au, eu)
 	assertMatrixEqual(t, al.MatMul(au), x)
