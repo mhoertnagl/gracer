@@ -219,6 +219,52 @@ func (a *Matrix) Transpose() *Matrix {
 	return m
 }
 
+func (m *Matrix) LUFactorize() (*Matrix, *Matrix) {
+	sz := len(m.m)
+	l := NewEmptyMatrix(sz)
+	u := NewEmptyMatrix(sz)
+	for i := 0; i < sz; i++ {
+		for j := i; j < sz; j++ {
+			d := 0.0
+			e := 0.0
+			for k := 0; k < i; k++ {
+				d += l.m[j][k] * u.m[k][i]
+				e += l.m[i][k] * u.m[k][j]
+			}
+			l.m[j][i] = m.m[j][i] - d
+			u.m[i][j] = (m.m[i][j] - e) / l.m[i][i]
+		}
+	}
+	return l, u
+}
+
+// func lu(m [][]float64) ([][]float64, [][]float64) {
+// 	sz := len(m)
+// 	l := emptyArray2D(sz)
+// 	u := emptyArray2D(sz)
+// 	for i := 0; i < sz; i++ {
+// 		for j := i; j < sz; j++ {
+// 			d := 0.0
+// 			e := 0.0
+// 			for k := 0; k < i; k++ {
+// 				d += l.m[j][k] * u.m[k][i]
+// 				e += l.m[i][k] * u.m[k][j]
+// 			}
+// 			l[j][i] = m[j][i] - d
+// 			u[i][j] = (m[i][j] - e) / l[i][i]
+// 		}
+// 	}
+// 	return l, u
+// }
+
+// func emptyArray2D(size int) [][]float64 {
+// 	m := make([][]float64, size)
+// 	for i := range m {
+// 		m[i] = make([]float64, size)
+// 	}
+// 	return m
+// }
+
 func main() {
 	v := NewCanvas(300, 250)
 	v.Set(100, 100, NewColor(1, 1, 1))
