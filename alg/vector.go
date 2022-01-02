@@ -13,16 +13,6 @@ func newVector(vs ...float64) vector {
 }
 
 func (a vector) add(b vector) vector {
-	// sza := len(a)
-	// szb := len(b)
-	// if sza != szb {
-	// 	panic(fmt.Sprintf("Vector size mismatch. Length of a is [%d], length of b is [%d]", sza, szb))
-	// }
-	// v := newZeroVector(sza)
-	// for i := 0; i < sza; i++ {
-	// 	v[i] = a[i] + b[i]
-	// }
-	// return v
 	v := newZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = a[i] + b[i]
