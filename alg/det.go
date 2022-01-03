@@ -39,34 +39,11 @@ var ptable4 = ptable{
 	{1, 3, 2, 4}, // odd
 }
 
-func det(tab ptable, m Matrix) float64 {
-	sz := len(m)
-	sign := 1.0
-	result := 0.0
-	for _, p := range tab {
-		factor := m[0][p[0]]
-		for i := 1; i < sz; i++ {
-			factor *= m[i][p[i]]
-		}
-		result += sign * factor
-		sign *= -1.0
-	}
-	return result
-}
-
-func det2(m Matrix) float64 {
-	return m[0][0]*m[1][1] - m[1][0]*m[0][1]
-}
-
-func det3(m Matrix) float64 {
-	return det(ptable3, m)
-}
-
-func det4(m Matrix) float64 {
-	return det(ptable4, m)
-}
-
 func (m Matrix) Det() float64 {
+	return det(m)
+}
+
+func det(m Matrix) float64 {
 	switch len(m) {
 	case 0:
 		return 0
@@ -78,6 +55,84 @@ func (m Matrix) Det() float64 {
 		return det3(m)
 	case 4:
 		return det4(m)
+	default:
+		return det5(m)
 	}
-	panic("Cannot compute determinant of matrix larger than 4")
+}
+
+func det2(m Matrix) float64 {
+	return m[0][0]*m[1][1] - m[1][0]*m[0][1]
+}
+
+func det3(m Matrix) float64 {
+	return tableDet(ptable3, m)
+}
+
+func det4(m Matrix) float64 {
+	return tableDet(ptable4, m)
+}
+
+func tableDet(tab ptable, m Matrix) float64 {
+	sz := len(m)
+	sgn := 1.0
+	res := 0.0
+	for _, p := range tab {
+		fac := m[0][p[0]]
+		for i := 1; i < sz; i++ {
+			fac *= m[i][p[i]]
+		}
+		res += sgn * fac
+		sgn *= -1.0
+	}
+	return res
+}
+
+func det5(m Matrix) float64 {
+	det := 0.0
+	for c := 0; c < len(m); c++ {
+		det += m[0][c] * cofactor(m, 0, c)
+	}
+	return det
+}
+
+// TODO: Public?
+func cofactor(m Matrix, r int, c int) float64 {
+	minor := minor(m, r, c)
+	if (r+c)%2 == 0 {
+		return minor
+	}
+	return -minor
+}
+
+func minor(m Matrix, r int, c int) float64 {
+	return det(subMatrix(m, r, c))
+}
+
+func subMatrix(m Matrix, r int, c int) Matrix {
+	n := NewZeroMatrix(len(m) - 1)
+	// Copy sub matrix 0..r, 0..c
+	for cr := 0; cr < r; cr++ {
+		for cc := 0; cc < c; cc++ {
+			n[cr][cc] = m[cr][cc]
+		}
+	}
+	// Copy sub matrix 0..r, c..max
+	for cr := 0; cr < r; cr++ {
+		for cc := c; cc < len(m)-1; cc++ {
+			n[cr][cc] = m[cr][cc+1]
+		}
+	}
+	// Copy sub matrix r..max, 0..c
+	for cr := r; cr < len(m)-1; cr++ {
+		for cc := 0; cc < c; cc++ {
+			n[cr][cc] = m[cr+1][cc]
+		}
+	}
+	// Copy sub matrix r..max, c..max
+	for cr := r; cr < len(m)-1; cr++ {
+		for cc := c; cc < len(m)-1; cc++ {
+			n[cr][cc] = m[cr+1][cc+1]
+		}
+	}
+	return n
 }
