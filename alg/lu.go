@@ -1,9 +1,9 @@
 package alg
 
-func lu(m matrix) (matrix, matrix) {
+func (m Matrix) LuDecompose() (Matrix, Matrix) {
 	sz := len(m)
-	l := newZeroMatrix(sz)
-	u := newZeroMatrix(sz)
+	l := NewZeroMatrix(sz)
+	u := NewZeroMatrix(sz)
 	for i := 0; i < sz; i++ {
 		for j := i; j < sz; j++ {
 			d := 0.0

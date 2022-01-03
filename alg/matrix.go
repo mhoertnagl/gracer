@@ -1,40 +1,40 @@
 package alg
 
-type matrix []vector
+type Matrix []Vector
 
 // TODO: special type for square matrices.
 // type squareMatrix = []vector
 
-var id2 = newIdMatrix(2)
-var id3 = newIdMatrix(3)
-var id4 = newIdMatrix(4)
+var Id2 = NewIdMatrix(2)
+var Id3 = NewIdMatrix(3)
+var Id4 = NewIdMatrix(4)
 
-func newZeroMatrix(size int) matrix {
-	m := make(matrix, size)
+func NewZeroMatrix(size int) Matrix {
+	m := make(Matrix, size)
 	for i := range m {
-		m[i] = newZeroVector(size)
+		m[i] = NewZeroVector(size)
 	}
 	return m
 }
 
-func newIdMatrix(size int) matrix {
-	m := newZeroMatrix(size)
+func NewIdMatrix(size int) Matrix {
+	m := NewZeroMatrix(size)
 	for i := 0; i < size; i++ {
 		m[i][i] = 1.0
 	}
 	return m
 }
 
-func newMatrix(rs ...vector) matrix {
+func NewMatrix(rs ...Vector) Matrix {
 	return rs
 }
 
-func r(vs ...float64) vector {
+func Row(vs ...float64) Vector {
 	return vs
 }
 
-func (a matrix) mulMat(b matrix) matrix {
-	m := newZeroMatrix(len(a))
+func (a Matrix) MultMat(b Matrix) Matrix {
+	m := NewZeroMatrix(len(a))
 	for r := 0; r < len(a); r++ {
 		for c := 0; c < len(a); c++ {
 			for l := 0; l < len(a); l++ {
@@ -45,8 +45,8 @@ func (a matrix) mulMat(b matrix) matrix {
 	return m
 }
 
-func (a matrix) mulVec(b vector) vector {
-	v := newZeroVector(len(a))
+func (a Matrix) MultVec(b Vector) Vector {
+	v := NewZeroVector(len(a))
 	for r := 0; r < len(a); r++ {
 		for l := 0; l < len(a); l++ {
 			v[r] += a[r][l] * b[l]
@@ -55,8 +55,8 @@ func (a matrix) mulVec(b vector) vector {
 	return v
 }
 
-func (a matrix) transpose() matrix {
-	m := newZeroMatrix(len(a))
+func (a Matrix) Transpose() Matrix {
+	m := NewZeroMatrix(len(a))
 	for r := 0; r < len(a); r++ {
 		for c := 0; c < len(a); c++ {
 			m[c][r] = a[r][c]

@@ -1,90 +1,107 @@
 package alg
 
-import "math"
+import (
+	"fmt"
+	"math"
+	"strings"
+)
 
-type vector []float64
+type Vector []float64
 
-func newZeroVector(size int) vector {
-	return make(vector, size)
+func NewZeroVector(size int) Vector {
+	return make(Vector, size)
 }
 
-func newVector(vs ...float64) vector {
+func NewVector(vs ...float64) Vector {
 	return vs
 }
 
-func (a vector) add(b vector) vector {
-	v := newZeroVector(len(a))
+func (a Vector) String() string {
+	var b strings.Builder
+	b.WriteString("Vector(")
+	for i := 0; i < len(a); i++ {
+		if i > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(fmt.Sprintf("%8.6f", a[i]))
+	}
+	b.WriteString(")")
+	return b.String()
+}
+
+func (a Vector) Add(b Vector) Vector {
+	v := NewZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = a[i] + b[i]
 	}
 	return v
 }
 
-func (a vector) sub(b vector) vector {
-	v := newZeroVector(len(a))
+func (a Vector) Sub(b Vector) Vector {
+	v := NewZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = a[i] - b[i]
 	}
 	return v
 }
 
-func (a vector) neg() vector {
-	v := newZeroVector(len(a))
+func (a Vector) Neg() Vector {
+	v := NewZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = -a[i]
 	}
 	return v
 }
 
-func (a vector) dot(b vector) float64 {
-	v := 0.0
-	for i := 0; i < len(a); i++ {
-		v *= a[i] * b[i]
-	}
-	return v
-}
-
-func (a vector) had(b vector) vector {
-	v := newZeroVector(len(a))
-	for i := 0; i < len(a); i++ {
-		v[i] = a[i] * b[i]
-	}
-	return v
-}
-
-func (a vector) mult(f float64) vector {
-	v := newZeroVector(len(a))
+func (a Vector) Mult(f float64) Vector {
+	v := NewZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = f * a[i]
 	}
 	return v
 }
 
-func (a vector) div(d float64) vector {
-	v := newZeroVector(len(a))
+func (a Vector) Div(d float64) Vector {
+	v := NewZeroVector(len(a))
 	for i := 0; i < len(a); i++ {
 		v[i] = a[i] / d
 	}
 	return v
 }
 
-func (a vector) mag() float64 {
-	return math.Sqrt(a.dot(a))
+func (a Vector) Dot(b Vector) float64 {
+	v := 0.0
+	for i := 0; i < len(a); i++ {
+		v += a[i] * b[i]
+	}
+	return v
 }
 
-func (a vector) norm() vector {
-	return a.div(a.mag())
-}
-
-// TODO: cross is only defined for 3D-vectors
-func (a vector) cross(b vector) vector {
+// TODO: cross is only defined for 3D-Vectors
+func (a Vector) Cross(b Vector) Vector {
 	x := a[1]*b[2] - a[2]*b[1]
 	y := a[2]*b[0] - a[0]*b[2]
 	z := a[0]*b[1] - a[1]*b[0]
-	return newVector(x, y, z)
+	return NewVector(x, y, z)
 }
 
-// type color = vector
+func (a Vector) Had(b Vector) Vector {
+	v := NewZeroVector(len(a))
+	for i := 0; i < len(a); i++ {
+		v[i] = a[i] * b[i]
+	}
+	return v
+}
+
+func (a Vector) Mag() float64 {
+	return math.Sqrt(a.Dot(a))
+}
+
+func (a Vector) Norm() Vector {
+	return a.Div(a.Mag())
+}
+
+// type color = Vector
 
 // func newColor() color {
 // 	return color(newZeroVector(3))
