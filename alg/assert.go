@@ -29,7 +29,7 @@ func AssertMatrixEqual(t *testing.T, a, e Matrix) {
 }
 
 func floatEqual(a, b float64) bool {
-	return math.Abs(a-b) <= 1e-6
+	return math.Abs(a-b) <= 1e-5
 }
 
 func vectorEqual(a, b Vector) bool {

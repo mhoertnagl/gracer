@@ -12,51 +12,49 @@ var ptable3 = ptable{
 }
 
 var ptable4 = ptable{
-	{1, 2, 3, 4}, // even
-	{1, 2, 4, 3}, // odd
-	{1, 3, 4, 2}, // even
-	{2, 3, 4, 1}, // odd
-	{2, 3, 1, 4}, // even
-	{2, 4, 1, 3}, // odd
-	{3, 4, 1, 2}, // even
-	{3, 4, 2, 1}, // odd
-	{3, 1, 2, 4}, // even
-	{4, 1, 2, 3}, // odd
-	{4, 1, 3, 2}, // even
-	{4, 2, 3, 1}, // odd
+	{0, 1, 2, 3}, // even
+	{0, 1, 3, 2}, // odd
+	{0, 2, 3, 1}, // even
+	{1, 2, 3, 0}, // odd
+	{1, 2, 0, 3}, // even
+	{1, 3, 0, 2}, // odd
+	{2, 3, 0, 1}, // even
+	{2, 3, 1, 0}, // odd
+	{2, 0, 1, 3}, // even
+	{3, 0, 1, 2}, // odd
+	{3, 0, 2, 1}, // even
+	{3, 1, 2, 0}, // odd
 	// swap 2, 3
-	{4, 3, 2, 1}, // even
-	{4, 3, 1, 2}, // odd
-	{4, 2, 1, 3}, // even
-	{3, 2, 1, 4}, // odd
-	{3, 2, 4, 1}, // even
-	{3, 1, 4, 2}, // odd
-	{2, 1, 4, 3}, // even
-	{2, 1, 3, 4}, // odd
-	{2, 4, 3, 1}, // even
-	{1, 4, 3, 2}, // odd
-	{1, 4, 2, 3}, // even
-	{1, 3, 2, 4}, // odd
+	{3, 2, 1, 0}, // even
+	{3, 2, 0, 1}, // odd
+	{3, 1, 0, 2}, // even
+	{2, 1, 0, 3}, // odd
+	{2, 1, 3, 0}, // even
+	{2, 0, 3, 1}, // odd
+	{1, 0, 3, 2}, // even
+	{1, 0, 2, 3}, // odd
+	{1, 3, 2, 0}, // even
+	{0, 3, 2, 1}, // odd
+	{0, 3, 1, 2}, // even
+	{0, 2, 1, 3}, // odd
 }
 
-func (m Matrix) Det() float64 {
-	return det(m)
-}
-
-func det(m Matrix) float64 {
+func Det(m Matrix) float64 {
 	switch len(m) {
-	case 0:
-		return 0
-	case 1:
-		return m[0][0]
+	// case 0:
+	// 	return 0
+	// case 1:
+	// 	return m[0][0]
 	case 2:
 		return det2(m)
 	case 3:
 		return det3(m)
 	case 4:
 		return det4(m)
+	// default:
+	// 	return det5(m)
 	default:
-		return det5(m)
+		panic("Not implemented.")
 	}
 }
 
@@ -87,28 +85,27 @@ func tableDet(tab ptable, m Matrix) float64 {
 	return res
 }
 
-func det5(m Matrix) float64 {
-	det := 0.0
-	for c := 0; c < len(m); c++ {
-		det += m[0][c] * cofactor(m, 0, c)
-	}
-	return det
-}
+// func det5(m Matrix) float64 {
+// 	det := 0.0
+// 	for c := 0; c < len(m); c++ {
+// 		det += m[0][c] * Cofactor(m, 0, c)
+// 	}
+// 	return det
+// }
 
-// TODO: Public?
-func cofactor(m Matrix, r int, c int) float64 {
-	minor := minor(m, r, c)
+func Cofactor(m Matrix, r int, c int) float64 {
+	minor := Minor(m, r, c)
 	if (r+c)%2 == 0 {
 		return minor
 	}
 	return -minor
 }
 
-func minor(m Matrix, r int, c int) float64 {
-	return det(subMatrix(m, r, c))
+func Minor(m Matrix, r int, c int) float64 {
+	return Det(SubMatrix(m, r, c))
 }
 
-func subMatrix(m Matrix, r int, c int) Matrix {
+func SubMatrix(m Matrix, r int, c int) Matrix {
 	n := NewZeroMatrix(len(m) - 1)
 	// Copy sub matrix 0..r, 0..c
 	for cr := 0; cr < r; cr++ {
