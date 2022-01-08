@@ -16,6 +16,14 @@ func NewVector(vs ...float64) Vector {
 	return vs
 }
 
+func NewVector3(x, y, z float64) Vector {
+	return NewVector(x, y, z, 0)
+}
+
+func NewPoint(x, y, z float64) Vector {
+	return NewVector(x, y, z, 1)
+}
+
 func (a Vector) String() string {
 	var b strings.Builder
 	b.WriteString("Vector(")

@@ -39,6 +39,18 @@ var ptable4 = ptable{
 	{0, 2, 1, 3}, // odd
 }
 
+func Inverse(m Matrix) Matrix {
+	n := NewZeroMatrix(len(m))
+	d := Det(m)
+	for r := 0; r < len(m); r++ {
+		for c := 0; c < len(m); c++ {
+			// Note implcit transpose.
+			n[c][r] = Cofactor(m, r, c) / d
+		}
+	}
+	return n
+}
+
 func Det(m Matrix) float64 {
 	switch len(m) {
 	// case 0:
