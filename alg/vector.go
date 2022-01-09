@@ -108,9 +108,3 @@ func (a Vector) Mag() float64 {
 func (a Vector) Norm() Vector {
 	return a.Div(a.Mag())
 }
-
-// type color = Vector
-
-// func newColor() color {
-// 	return color(newZeroVector(3))
-// }
