@@ -10,16 +10,19 @@ type Object interface {
 	Intersect(r Ray) Intersections
 }
 
-type Sphere struct{}
+type Sphere struct {
+	Transform alg.Matrix
+}
 
 func NewSphere() Sphere {
-	return Sphere{}
+	return Sphere{Transform: alg.Id4}
 }
 
 func (s Sphere) Intersect(r Ray) Intersections {
-	str := r.origin.Sub(alg.NewPoint(0, 0, 0))
-	a := r.direction.Dot(r.direction)
-	b := 2 * r.direction.Dot(str)
+	r2 := r.Transform(alg.Inverse(s.Transform))
+	str := r2.origin.Sub(alg.NewPoint(0, 0, 0))
+	a := r2.direction.Dot(r2.direction)
+	b := 2 * r2.direction.Dot(str)
 	c := str.Dot(str) - 1
 	d := b*b - 4*a*c
 	if d < 0 {

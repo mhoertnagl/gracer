@@ -28,3 +28,7 @@ func (r Ray) String() string {
 func (r Ray) Position(t float64) alg.Vector {
 	return r.origin.Add(r.direction.Mult(t))
 }
+
+func (r Ray) Transform(m alg.Matrix) Ray {
+	return NewRay(m.MultVec(r.origin), m.MultVec(r.direction))
+}

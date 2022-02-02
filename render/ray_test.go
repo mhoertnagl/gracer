@@ -56,3 +56,37 @@ func TestARayBehindASphere(t *testing.T) {
 	AssertFloatEqual(t, xs[0].t, -6.0)
 	AssertFloatEqual(t, xs[1].t, -4.0)
 }
+
+func TestTranslatingARay(t *testing.T) {
+	r := NewRay(alg.NewPoint(1, 2, 3), alg.NewVector3(0, 1, 0))
+	m := alg.Translation(3, 4, 5)
+	r2 := r.Transform(m)
+	AssertVectorEqual(t, r2.origin, alg.NewPoint(4, 6, 8))
+	AssertVectorEqual(t, r2.direction, alg.NewVector3(0, 1, 0))
+}
+
+func TestScalingARay(t *testing.T) {
+	r := NewRay(alg.NewPoint(1, 2, 3), alg.NewVector3(0, 1, 0))
+	m := alg.Scaling(2, 3, 4)
+	r2 := r.Transform(m)
+	AssertVectorEqual(t, r2.origin, alg.NewPoint(2, 6, 12))
+	AssertVectorEqual(t, r2.direction, alg.NewVector3(0, 3, 0))
+}
+
+func TestIntersectingAScaledSphereWithARay(t *testing.T) {
+	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
+	s := NewSphere()
+	s.Transform = alg.Scaling(2, 2, 2)
+	xs := s.Intersect(r)
+	AssertIntEqual(t, len(xs), 2)
+	AssertFloatEqual(t, xs[0].t, 3)
+	AssertFloatEqual(t, xs[1].t, 7)
+}
+
+func TestIntersectingATranslatedSphereWithARay(t *testing.T) {
+	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
+	s := NewSphere()
+	s.Transform = alg.Translation(5, 0, 0)
+	xs := s.Intersect(r)
+	AssertIntEqual(t, len(xs), 0)
+}
