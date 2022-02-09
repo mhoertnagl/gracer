@@ -14,6 +14,10 @@ func NewColor(r, g, b float64) Color {
 	return Color(alg.NewVector(r, g, b))
 }
 
+func Black() Color {
+	return NewColor(0, 0, 0)
+}
+
 func (c Color) String() string {
 	return fmt.Sprintf("Color(%f, %f, %f)", c[0], c[1], c[2])
 }

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mhoertnagl/gracer/alg"
+	"github.com/mhoertnagl/gracer/canvas"
 )
 
 func AssertIntEqual(t *testing.T, a, e int) {
@@ -34,6 +35,13 @@ func AssertMatrixEqual(t *testing.T, a, e alg.Matrix) {
 		t.Errorf("Matrix size was incorrect, \n got: %v \n want: %v", len(a), len(e))
 	} else if !matrixEqual(a, e) {
 		t.Errorf("Matrix was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
+func AssertColorEqual(t *testing.T, a, e canvas.Color) {
+	t.Helper()
+	if !colorEqual(a, e) {
+		t.Errorf("Color was incorrect, \n got: %v \n want: %v", a, e)
 	}
 }
 
@@ -67,4 +75,10 @@ func matrixEqual(a, b alg.Matrix) bool {
 		}
 	}
 	return true
+}
+
+func colorEqual(a, b canvas.Color) bool {
+	return floatEqual(a[0], b[0]) &&
+		floatEqual(a[1], b[1]) &&
+		floatEqual(a[2], b[2])
 }

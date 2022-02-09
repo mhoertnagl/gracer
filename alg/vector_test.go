@@ -116,3 +116,16 @@ func TestNormalizedVectorMagnitude(t *testing.T) {
 		AssertFloatEqual(t, d.v.Norm().Mag(), d.e)
 	}
 }
+
+func TestReflectVectorAt45Deg(t *testing.T) {
+	v := NewVector(1, -1, 0)
+	n := NewVector(0, 1, 0)
+	AssertVectorEqual(t, v.Reflect(n), NewVector(1, 1, 0))
+}
+
+func TestReflectVectorOffASlantedSurface(t *testing.T) {
+	f := math.Sqrt(2) / 2
+	v := NewVector(0, -1, 0)
+	n := NewVector(f, f, 0)
+	AssertVectorEqual(t, v.Reflect(n), NewVector(1, 0, 0))
+}

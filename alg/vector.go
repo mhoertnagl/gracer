@@ -108,3 +108,7 @@ func (a Vector) Mag() float64 {
 func (a Vector) Norm() Vector {
 	return a.Div(a.Mag())
 }
+
+func (a Vector) Reflect(n Vector) Vector {
+	return a.Sub(n.Mult(2 * a.Dot(n)))
+}

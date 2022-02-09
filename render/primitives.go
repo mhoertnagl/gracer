@@ -7,18 +7,23 @@ import (
 )
 
 type Object interface {
-	Intersect(r Ray) Intersections
+	Intersect(r *Ray) Intersections
+	NormalAt(p alg.Vector) alg.Vector
 }
 
 type Sphere struct {
 	Transform alg.Matrix
+	Material  *Material
 }
 
-func NewSphere() Sphere {
-	return Sphere{Transform: alg.Id4}
+func NewSphere() *Sphere {
+	return &Sphere{
+		Transform: alg.Id4,
+		Material:  NewMaterial(),
+	}
 }
 
-func (s Sphere) Intersect(r Ray) Intersections {
+func (s *Sphere) Intersect(r *Ray) Intersections {
 	r2 := r.Transform(alg.Inverse(s.Transform))
 	str := r2.origin.Sub(alg.NewPoint(0, 0, 0))
 	a := r2.direction.Dot(r2.direction)
@@ -34,4 +39,14 @@ func (s Sphere) Intersect(r Ray) Intersections {
 		NewIntersection((-b-ds)/a2, s),
 		NewIntersection((-b+ds)/a2, s),
 	}
+}
+
+func (s *Sphere) NormalAt(p alg.Vector) alg.Vector {
+	inv := alg.Inverse(s.Transform)
+	op := inv.MultVec(p)
+	on := op.Sub(alg.NewPoint(0, 0, 0))
+	n := inv.Transpose().MultVec(on)
+	// Reset w coordinate to 0.
+	n[3] = 0
+	return n.Norm()
 }
