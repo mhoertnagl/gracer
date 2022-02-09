@@ -9,6 +9,7 @@ import (
 type Object interface {
 	Intersect(r *Ray) Intersections
 	NormalAt(p alg.Vector) alg.Vector
+	GetMaterial() *Material
 }
 
 type Sphere struct {
@@ -25,9 +26,9 @@ func NewSphere() *Sphere {
 
 func (s *Sphere) Intersect(r *Ray) Intersections {
 	r2 := r.Transform(alg.Inverse(s.Transform))
-	str := r2.origin.Sub(alg.NewPoint(0, 0, 0))
-	a := r2.direction.Dot(r2.direction)
-	b := 2 * r2.direction.Dot(str)
+	str := r2.Origin.Sub(alg.NewPoint(0, 0, 0))
+	a := r2.Direction.Dot(r2.Direction)
+	b := 2 * r2.Direction.Dot(str)
 	c := str.Dot(str) - 1
 	d := b*b - 4*a*c
 	if d < 0 {
@@ -49,4 +50,8 @@ func (s *Sphere) NormalAt(p alg.Vector) alg.Vector {
 	// Reset w coordinate to 0.
 	n[3] = 0
 	return n.Norm()
+}
+
+func (s *Sphere) GetMaterial() *Material {
+	return s.Material
 }

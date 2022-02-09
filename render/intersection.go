@@ -1,12 +1,12 @@
 package render
 
 type Intersection struct {
-	t   float64
-	obj Object
+	Distance float64
+	Obj      Object
 }
 
-func NewIntersection(t float64, obj Object) *Intersection {
-	return &Intersection{t: t, obj: obj}
+func NewIntersection(distance float64, obj Object) *Intersection {
+	return &Intersection{Distance: distance, Obj: obj}
 }
 
 type Intersections []*Intersection
@@ -18,7 +18,7 @@ func NewIntersections(is ...*Intersection) Intersections {
 func (xs Intersections) Hit() *Intersection {
 	var hit *Intersection = nil
 	for i := 0; i < len(xs); i++ {
-		if x := xs[i]; x.t > 0 && (hit == nil || x.t < hit.t) {
+		if x := xs[i]; x.Distance > 0 && (hit == nil || x.Distance < hit.Distance) {
 			hit = xs[i]
 		}
 	}

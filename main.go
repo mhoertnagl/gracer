@@ -12,9 +12,12 @@ func main() {
 	ray_origin := alg.NewPoint(0, 0, -5)
 	wall_z := 10.0
 	wall_size := 7.0
-	canvas_pixels := 100
-	color := canvas.NewColor(1, 0, 0)
+	canvas_pixels := 300
+	light_pos := alg.NewPoint(-10, 10, -10)
+	light_color := canvas.NewColor(1, 1, 1)
+	light := render.NewPointLight(light_pos, light_color)
 	shape := render.NewSphere()
+	shape.Material.Color = canvas.NewColor(1, 0.2, 1)
 	pixel_size := wall_size / float64(canvas_pixels)
 	half := wall_size / 2
 	v := canvas.NewCanvas(canvas_pixels, canvas_pixels)
@@ -26,6 +29,11 @@ func main() {
 			r := render.NewRay(ray_origin, position.Sub(ray_origin).Norm())
 			xs := shape.Intersect(r)
 			if xs.Hit() != nil {
+				hit := xs.Hit()
+				pnt := r.Position(hit.Distance)
+				eye := r.Direction.Neg()
+				normal := hit.Obj.NormalAt(pnt)
+				color := hit.Obj.GetMaterial().Lighting(light, pnt, eye, normal)
 				v.Set(x, y, color)
 			}
 		}
