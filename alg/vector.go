@@ -12,6 +12,7 @@ func NewZeroVector(size int) Vector {
 	return make(Vector, size)
 }
 
+// TODO: NewVector should be Vector3 and Vector should be renamed.
 func NewVector(vs ...float64) Vector {
 	return vs
 }

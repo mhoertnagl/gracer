@@ -2,11 +2,11 @@ package render
 
 type Intersection struct {
 	Distance float64
-	Obj      Object
+	Object   Object
 }
 
-func NewIntersection(distance float64, obj Object) *Intersection {
-	return &Intersection{Distance: distance, Obj: obj}
+func NewIntersection(distance float64, object Object) *Intersection {
+	return &Intersection{Distance: distance, Object: object}
 }
 
 type Intersections []*Intersection

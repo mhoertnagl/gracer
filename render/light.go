@@ -8,7 +8,7 @@ import (
 )
 
 type Light interface {
-	Lighting(m *Material, p alg.Vector, ev alg.Vector, nv alg.Vector) canvas.Color
+	Lighting(m *Material, p, eye, normal alg.Vector) canvas.Color
 }
 
 type PointLight struct {
@@ -20,17 +20,17 @@ func NewPointLight(pos alg.Vector, intensity canvas.Color) *PointLight {
 	return &PointLight{Position: pos, Intensity: intensity}
 }
 
-func (l *PointLight) Lighting(m *Material, p alg.Vector, ev alg.Vector, nv alg.Vector) canvas.Color {
+func (l *PointLight) Lighting(m *Material, p, eye, normal alg.Vector) canvas.Color {
 	ec := m.Color.Mul(l.Intensity)
 	lv := l.Position.Sub(p).Norm()
 	amb := ec.Scale(m.Ambient)
 	dif := canvas.Black()
 	spe := canvas.Black()
-	ldn := lv.Dot(nv)
+	ldn := lv.Dot(normal)
 	if ldn > 0 {
 		dif = ec.Scale(m.Diffuse * ldn)
-		rv := lv.Neg().Reflect(nv)
-		rde := rv.Dot(ev)
+		rv := lv.Neg().Reflect(normal)
+		rde := rv.Dot(eye)
 		if rde > 0 {
 			f := math.Pow(rde, m.Shininess)
 			spe = l.Intensity.Scale(f * m.Specular)

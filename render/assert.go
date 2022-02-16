@@ -45,6 +45,27 @@ func AssertColorEqual(t *testing.T, a, e canvas.Color) {
 	}
 }
 
+func AssertObjectEqual(t *testing.T, a, e Object) {
+	t.Helper()
+	if a != e {
+		t.Errorf("Object was incorrect, \n got: %v \n want: %v", a, e)
+	}
+}
+
+func AssertTrue(t *testing.T, a bool) {
+	t.Helper()
+	if !a {
+		t.Errorf("Expected to be true but was false")
+	}
+}
+
+func AssertFalse(t *testing.T, a bool) {
+	t.Helper()
+	if a {
+		t.Errorf("Expected to be false but was true")
+	}
+}
+
 func floatEqual(a, b float64) bool {
 	return math.Abs(a-b) <= 1e-5
 }
