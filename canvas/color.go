@@ -18,6 +18,10 @@ func Black() Color {
 	return NewColor(0, 0, 0)
 }
 
+func White() Color {
+	return NewColor(1, 1, 1)
+}
+
 func (c Color) String() string {
 	return fmt.Sprintf("Color(%f, %f, %f)", c[0], c[1], c[2])
 }
