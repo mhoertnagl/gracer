@@ -39,7 +39,7 @@ func TestTheHitWhenAnIntersectionOccursOnTheOutside(t *testing.T) {
 }
 
 func TestTheHitWhenAnIntersectionOccursOnTheInside(t *testing.T) {
-	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 0, 1))
+	r := NewRay(alg.Origin, alg.NewVector3(0, 0, 1))
 	s := NewSphere()
 	i := NewIntersection(1, s)
 	c := prepareComps(i, r)
@@ -61,11 +61,10 @@ func TestShadingAnIntersection(t *testing.T) {
 
 func TestShadingAnIntersectionFromTheInside(t *testing.T) {
 	e := canvas.NewColor(0.90498, 0.90498, 0.90498)
-	w := newDefaultWorld()
-	w.ClearLights()
+	w := newDefaultWorldWithoutLight()
 	l := NewPointLight(alg.NewPoint(0, 0.25, 0), canvas.White())
 	w.AddLight(l)
-	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 0, 1))
+	r := NewRay(alg.Origin, alg.NewVector3(0, 0, 1))
 	s := w.Objects[1]
 	i := NewIntersection(0.5, s)
 	c := prepareComps(i, r)
@@ -75,7 +74,7 @@ func TestShadingAnIntersectionFromTheInside(t *testing.T) {
 func TestTheColorWhenTheRayMisses(t *testing.T) {
 	w := newDefaultWorld()
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 1, 0))
-	c := w.ColorAt(r)
+	c := w.colorAt(r)
 	AssertColorEqual(t, c, canvas.Black())
 }
 
@@ -83,7 +82,7 @@ func TestTheColorWhenTheRayHits(t *testing.T) {
 	e := canvas.NewColor(0.38066, 0.47583, 0.2855)
 	w := newDefaultWorld()
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
-	c := w.ColorAt(r)
+	c := w.colorAt(r)
 	AssertColorEqual(t, c, e)
 }
 
@@ -92,7 +91,7 @@ func TestTheColorWithAnIntersectionBehindTheRay(t *testing.T) {
 	w.Objects[0].GetMaterial().Ambient = 1
 	w.Objects[1].GetMaterial().Ambient = 1
 	r := NewRay(alg.NewPoint(0, 0, 0.75), alg.NewVector3(0, 0, -1))
-	c := w.ColorAt(r)
+	c := w.colorAt(r)
 	AssertColorEqual(t, c, w.Objects[1].GetMaterial().Color)
 }
 
@@ -107,6 +106,19 @@ func newDefaultWorld() *World {
 	s2 := NewSphere()
 	s2.Transform = alg.Scaling(0.5, 0.5, 0.5)
 	w.AddLight(l)
+	w.AddObject(s1)
+	w.AddObject(s2)
+	return w
+}
+
+func newDefaultWorldWithoutLight() *World {
+	w := NewWorld()
+	s1 := NewSphere()
+	s1.Material.Color = canvas.NewColor(0.8, 1.0, 0.6)
+	s1.Material.Diffuse = 0.7
+	s1.Material.Specular = 0.2
+	s2 := NewSphere()
+	s2.Transform = alg.Scaling(0.5, 0.5, 0.5)
 	w.AddObject(s1)
 	w.AddObject(s2)
 	return w

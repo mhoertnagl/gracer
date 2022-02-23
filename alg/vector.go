@@ -8,6 +8,10 @@ import (
 
 type Vector []float64
 
+var Origin = NewPoint(0, 0, 0)
+
+// TODO: X, Y, Z, NX, NY, NZ
+
 func NewZeroVector(size int) Vector {
 	return make(Vector, size)
 }

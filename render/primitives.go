@@ -26,7 +26,7 @@ func NewSphere() *Sphere {
 
 func (s *Sphere) Intersect(r *Ray) Intersections {
 	r2 := r.Transform(alg.Inverse(s.Transform))
-	str := r2.Origin.Sub(alg.NewPoint(0, 0, 0))
+	str := r2.Origin.Sub(alg.Origin)
 	a := r2.Direction.Dot(r2.Direction)
 	b := 2 * r2.Direction.Dot(str)
 	c := str.Dot(str) - 1
@@ -45,7 +45,7 @@ func (s *Sphere) Intersect(r *Ray) Intersections {
 func (s *Sphere) NormalAt(p alg.Vector) alg.Vector {
 	inv := alg.Inverse(s.Transform)
 	op := inv.MultVec(p)
-	on := op.Sub(alg.NewPoint(0, 0, 0))
+	on := op.Sub(alg.Origin)
 	n := inv.Transpose().MultVec(on)
 	// Reset w coordinate to 0.
 	n[3] = 0

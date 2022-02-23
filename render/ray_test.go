@@ -40,7 +40,7 @@ func TestARayMissesASphere(t *testing.T) {
 }
 
 func TestARayOriginatesInsideASphere(t *testing.T) {
-	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 0, 1))
+	r := NewRay(alg.Origin, alg.NewVector3(0, 0, 1))
 	s := NewSphere()
 	xs := s.Intersect(r)
 	AssertIntEqual(t, len(xs), 2)

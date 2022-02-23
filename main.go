@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"time"
 
 	"github.com/mhoertnagl/gracer/alg"
@@ -11,36 +12,75 @@ import (
 
 func main() {
 	defer timeTrack(time.Now(), "Ray Trace")
-	ray_origin := alg.NewPoint(0, 0, -5)
-	wall_z := 10.0
-	wall_size := 7.0
-	canvas_pixels := 300
-	light_pos := alg.NewPoint(-10, 10, -10)
-	light_color := canvas.NewColor(1, 1, 1)
-	light := render.NewPointLight(light_pos, light_color)
-	shape := render.NewSphere()
-	shape.Material.Color = canvas.NewColor(1, 0.2, 1)
-	pixel_size := wall_size / float64(canvas_pixels)
-	half := wall_size / 2
-	v := canvas.NewCanvas(canvas_pixels, canvas_pixels)
-	for y := 0; y < canvas_pixels; y++ {
-		world_y := half - pixel_size*float64(y)
-		for x := 0; x < canvas_pixels; x++ {
-			world_x := -half + pixel_size*float64(x)
-			position := alg.NewPoint(world_x, world_y, wall_z)
-			r := render.NewRay(ray_origin, position.Sub(ray_origin).Norm())
-			xs := shape.Intersect(r)
-			if xs.Hit() != nil {
-				hit := xs.Hit()
-				pnt := r.Position(hit.Distance)
-				eye := r.Direction.Neg()
-				normal := hit.Object.NormalAt(pnt)
-				color := light.Lighting(hit.Object.GetMaterial(), pnt, eye, normal)
-				v.Set(x, y, color)
-			}
-		}
-	}
-	v.WriteToFile("out.jpg")
+
+	wallMaterial := render.NewMaterial()
+	wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
+	wallMaterial.Specular = 0
+
+	floor := render.NewSphere()
+	floor.Transform = alg.Scaling(10, 0.01, 10)
+	floor.Material = wallMaterial
+
+	leftWall := render.NewSphere()
+	leftWall.Transform = alg.
+		Translation(0, 0, 5).
+		MultMat(alg.RotationY(-math.Pi / 4)).
+		MultMat(alg.RotationX(math.Pi / 2)).
+		MultMat(alg.Scaling(10, 0.01, 10))
+	leftWall.Material = wallMaterial
+
+	rightWall := render.NewSphere()
+	rightWall.Transform = alg.
+		Translation(0, 0, 5).
+		MultMat(alg.RotationY(math.Pi / 4)).
+		MultMat(alg.RotationX(math.Pi / 2)).
+		MultMat(alg.Scaling(10, 0.01, 10))
+	rightWall.Material = wallMaterial
+
+	middle := render.NewSphere()
+	middle.Transform = alg.Translation(-0.5, 1, 0.5)
+	middle.Material.Color = canvas.NewColor(0.1, 1, 0.5)
+	middle.Material.Diffuse = 0.7
+	middle.Material.Specular = 0.3
+
+	right := render.NewSphere()
+	right.Transform = alg.
+		Translation(1.5, 0.5, -0.5).
+		MultMat(alg.Scaling(0.5, 0.5, 0.5))
+	right.Material.Color = canvas.NewColor(0.5, 1, 0.1)
+	right.Material.Diffuse = 0.7
+	right.Material.Specular = 0.3
+
+	left := render.NewSphere()
+	left.Transform = alg.
+		Translation(-1.5, 0.33, -0.75).
+		MultMat(alg.Scaling(0.33, 0.33, 0.33))
+	left.Material.Color = canvas.NewColor(1, 0.8, 0.1)
+	left.Material.Diffuse = 0.7
+	left.Material.Specular = 0.3
+
+	light := render.NewPointLight(alg.NewPoint(-10, 10, -10), canvas.White())
+	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White())
+
+	world := render.NewWorld()
+	world.AddLight(light)
+	// world.AddLight(light2)
+	world.AddObject(floor)
+	world.AddObject(leftWall)
+	world.AddObject(rightWall)
+	world.AddObject(middle)
+	world.AddObject(right)
+	world.AddObject(left)
+
+	camera := render.NewCamera(300, 150, math.Pi/3)
+	camera.Transform = render.ViewTransform(
+		alg.NewPoint(0, 1.5, -5),
+		alg.NewPoint(0, 1, 0),
+		alg.NewVector3(0, 1, 0),
+	)
+
+	canvas := world.Render(camera)
+	canvas.WriteToFile("out.jpg")
 }
 
 func timeTrack(start time.Time, name string) {

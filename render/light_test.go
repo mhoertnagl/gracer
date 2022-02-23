@@ -10,7 +10,7 @@ import (
 
 func TestLightingWithTheEyeBetweenLightAndTheSurface(t *testing.T) {
 	m := NewMaterial()
-	p := alg.NewPoint(0, 0, 0)
+	p := alg.Origin
 	ev := alg.NewVector3(0, 0, -1)
 	nv := alg.NewVector3(0, 0, -1)
 	lp := alg.NewPoint(0, 0, -10)
@@ -23,7 +23,7 @@ func TestLightingWithTheEyeBetweenLightAndTheSurface(t *testing.T) {
 func TestLightingWithTheEyeBetweenLightAndTheSurfaceEyeOffset45Deg(t *testing.T) {
 	f := math.Sqrt(2) / 2
 	m := NewMaterial()
-	p := alg.NewPoint(0, 0, 0)
+	p := alg.Origin
 	ev := alg.NewVector3(0, f, -f)
 	nv := alg.NewVector3(0, 0, -1)
 	lp := alg.NewPoint(0, 0, -10)
@@ -35,7 +35,7 @@ func TestLightingWithTheEyeBetweenLightAndTheSurfaceEyeOffset45Deg(t *testing.T)
 
 func TestLightingWithTheEyeOppositeSurfaceLightOffset45Deg(t *testing.T) {
 	m := NewMaterial()
-	p := alg.NewPoint(0, 0, 0)
+	p := alg.Origin
 	ev := alg.NewVector3(0, 0, -1)
 	nv := alg.NewVector3(0, 0, -1)
 	lp := alg.NewPoint(0, 10, -10)
@@ -48,7 +48,7 @@ func TestLightingWithTheEyeOppositeSurfaceLightOffset45Deg(t *testing.T) {
 func TestLightingWithEyeInThePathOfTheReflectionVector(t *testing.T) {
 	f := math.Sqrt(2) / 2
 	m := NewMaterial()
-	p := alg.NewPoint(0, 0, 0)
+	p := alg.Origin
 	ev := alg.NewVector3(0, -f, -f)
 	nv := alg.NewVector3(0, 0, -1)
 	lp := alg.NewPoint(0, 10, -10)
@@ -60,7 +60,7 @@ func TestLightingWithEyeInThePathOfTheReflectionVector(t *testing.T) {
 
 func TestLightingWithLightBehindSurface(t *testing.T) {
 	m := NewMaterial()
-	p := alg.NewPoint(0, 0, 0)
+	p := alg.Origin
 	ev := alg.NewVector3(0, 0, -1)
 	nv := alg.NewVector3(0, 0, -1)
 	lp := alg.NewPoint(0, 0, 10)

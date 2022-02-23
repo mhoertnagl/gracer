@@ -19,10 +19,6 @@ func NewWorld() *World {
 	}
 }
 
-func (w *World) ClearLights() {
-	w.Lights = make([]Light, 0)
-}
-
 func (w *World) AddLight(light Light) {
 	w.Lights = append(w.Lights, light)
 }
@@ -31,7 +27,19 @@ func (w *World) AddObject(object Object) {
 	w.Objects = append(w.Objects, object)
 }
 
-func (w *World) ColorAt(r *Ray) canvas.Color {
+func (world *World) Render(camera *Camera) *canvas.Canvas {
+	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
+	for y := 0; y < camera.vsize; y++ {
+		for x := 0; x < camera.hsize; x++ {
+			ray := camera.RayForPixel(x, y)
+			color := world.colorAt(ray)
+			canvas.Set(x, y, color)
+		}
+	}
+	return canvas
+}
+
+func (w *World) colorAt(r *Ray) canvas.Color {
 	xs := w.intersect(r)
 	if hit := xs.Hit(); hit != nil {
 		c := prepareComps(hit, r)
@@ -52,7 +60,7 @@ func (w *World) intersect(r *Ray) Intersections {
 	return xxs
 }
 
-// TODO: Whi isn't this part of the intersection?
+// TODO: Why isn't this part of the intersection?
 type comps struct {
 	Distance float64
 	Object   Object
