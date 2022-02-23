@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"time"
 
 	"github.com/mhoertnagl/gracer/alg"
 	"github.com/mhoertnagl/gracer/canvas"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+	defer timeTrack(time.Now(), "Ray Trace")
 	ray_origin := alg.NewPoint(0, 0, -5)
 	wall_z := 10.0
 	wall_size := 7.0
@@ -39,5 +41,9 @@ func main() {
 		}
 	}
 	v.WriteToFile("out.jpg")
-	fmt.Println("Done")
+}
+
+func timeTrack(start time.Time, name string) {
+	elapsed := time.Since(start)
+	log.Printf("%s took %s", name, elapsed)
 }
