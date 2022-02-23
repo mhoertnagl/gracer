@@ -32,8 +32,8 @@ func main() {
 				hit := xs.Hit()
 				pnt := r.Position(hit.Distance)
 				eye := r.Direction.Neg()
-				normal := hit.Obj.NormalAt(pnt)
-				color := hit.Obj.GetMaterial().Lighting(light, pnt, eye, normal)
+				normal := hit.Object.NormalAt(pnt)
+				color := light.Lighting(hit.Object.GetMaterial(), pnt, eye, normal)
 				v.Set(x, y, color)
 			}
 		}
