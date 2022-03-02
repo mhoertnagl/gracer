@@ -13,29 +13,31 @@ import (
 func main() {
 	defer timeTrack(time.Now(), "Ray Trace")
 
-	wallMaterial := render.NewMaterial()
-	wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
-	wallMaterial.Specular = 0
+	// wallMaterial := render.NewMaterial()
+	// wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
+	// wallMaterial.Specular = 0
 
-	floor := render.NewSphere()
-	floor.Transform = alg.Scaling(10, 0.01, 10)
-	floor.Material = wallMaterial
+	floor := render.NewPlane()
 
-	leftWall := render.NewSphere()
-	leftWall.Transform = alg.
-		Translation(0, 0, 5).
-		MultMat(alg.RotationY(-math.Pi / 4)).
-		MultMat(alg.RotationX(math.Pi / 2)).
-		MultMat(alg.Scaling(10, 0.01, 10))
-	leftWall.Material = wallMaterial
+	// floor := render.NewSphere()
+	// floor.Transform = alg.Scaling(10, 0.01, 10)
+	// floor.Material = wallMaterial
 
-	rightWall := render.NewSphere()
-	rightWall.Transform = alg.
-		Translation(0, 0, 5).
-		MultMat(alg.RotationY(math.Pi / 4)).
-		MultMat(alg.RotationX(math.Pi / 2)).
-		MultMat(alg.Scaling(10, 0.01, 10))
-	rightWall.Material = wallMaterial
+	// leftWall := render.NewSphere()
+	// leftWall.Transform = alg.
+	// 	Translation(0, 0, 5).
+	// 	MultMat(alg.RotationY(-math.Pi / 4)).
+	// 	MultMat(alg.RotationX(math.Pi / 2)).
+	// 	MultMat(alg.Scaling(10, 0.01, 10))
+	// leftWall.Material = wallMaterial
+
+	// rightWall := render.NewSphere()
+	// rightWall.Transform = alg.
+	// 	Translation(0, 0, 5).
+	// 	MultMat(alg.RotationY(math.Pi / 4)).
+	// 	MultMat(alg.RotationX(math.Pi / 2)).
+	// 	MultMat(alg.Scaling(10, 0.01, 10))
+	// rightWall.Material = wallMaterial
 
 	middle := render.NewSphere()
 	middle.Transform = alg.Translation(-0.5, 1, 0.5)
@@ -66,8 +68,8 @@ func main() {
 	world.AddLight(light)
 	// world.AddLight(light2)
 	world.AddObject(floor)
-	world.AddObject(leftWall)
-	world.AddObject(rightWall)
+	// world.AddObject(leftWall)
+	// world.AddObject(rightWall)
 	world.AddObject(middle)
 	world.AddObject(right)
 	world.AddObject(left)

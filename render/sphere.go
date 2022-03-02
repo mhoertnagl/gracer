@@ -6,12 +6,6 @@ import (
 	"github.com/mhoertnagl/gracer/alg"
 )
 
-type Object interface {
-	Intersect(r *Ray) Intersections
-	NormalAt(p alg.Vector) alg.Vector
-	GetMaterial() *Material
-}
-
 type Sphere struct {
 	Transform alg.Matrix
 	Material  *Material
@@ -46,10 +40,10 @@ func (s *Sphere) NormalAt(p alg.Vector) alg.Vector {
 	inv := alg.Inverse(s.Transform)
 	op := inv.MultVec(p)
 	on := op.Sub(alg.Origin)
-	n := inv.Transpose().MultVec(on)
+	wn := inv.Transpose().MultVec(on)
 	// Reset w coordinate to 0.
-	n[3] = 0
-	return n.Norm()
+	wn[3] = 0
+	return wn.Norm()
 }
 
 func (s *Sphere) GetMaterial() *Material {

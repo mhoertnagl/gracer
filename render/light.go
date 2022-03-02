@@ -48,7 +48,7 @@ func (l *PointLight) IsShadowed(w *World, p alg.Vector) bool {
 	distance := v.Mag()
 	direction := v.Norm()
 	r := NewRay(p, direction)
-	xxs := w.intersect(r)
-	hit := xxs.Hit()
+	xs := w.intersect(r)
+	hit := xs.Hit()
 	return hit != nil && hit.Distance < distance
 }
