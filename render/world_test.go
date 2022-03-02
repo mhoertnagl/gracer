@@ -95,6 +95,16 @@ func TestTheColorWithAnIntersectionBehindTheRay(t *testing.T) {
 	AssertColorEqual(t, c, w.Objects[1].GetMaterial().Color)
 }
 
+func TestTheHitShouldOffsetThePoint(t *testing.T) {
+	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
+	s := NewSphere()
+	s.Transform = alg.Translation(0, 0, 1)
+	i := NewIntersection(5, s)
+	c := prepareComps(i, r)
+	AssertTrue(t, c.OverPoint[2] < -EPSILON/2)
+	AssertTrue(t, c.Point[2] > c.OverPoint[2])
+}
+
 func newDefaultWorld() *World {
 	w := NewWorld()
 	lp := alg.NewPoint(-10, 10, -10)

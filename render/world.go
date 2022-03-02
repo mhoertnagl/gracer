@@ -7,6 +7,8 @@ import (
 	"github.com/mhoertnagl/gracer/canvas"
 )
 
+const EPSILON = 2.220446049250313e-8
+
 type World struct {
 	Lights  []Light
 	Objects []Object
@@ -62,12 +64,13 @@ func (w *World) intersect(r *Ray) Intersections {
 
 // TODO: Why isn't this part of the intersection?
 type comps struct {
-	Distance float64
-	Object   Object
-	Point    alg.Vector
-	Eye      alg.Vector
-	Normal   alg.Vector
-	Inside   bool
+	Distance  float64
+	Object    Object
+	Point     alg.Vector
+	OverPoint alg.Vector
+	Eye       alg.Vector
+	Normal    alg.Vector
+	Inside    bool
 }
 
 func prepareComps(i *Intersection, r *Ray) *comps {
@@ -81,6 +84,7 @@ func prepareComps(i *Intersection, r *Ray) *comps {
 		c.Inside = true
 		c.Normal = c.Normal.Neg()
 	}
+	c.OverPoint = c.Point.Add(c.Normal.Mult(EPSILON))
 	return c
 }
 
@@ -88,7 +92,8 @@ func (w *World) shade(c *comps) canvas.Color {
 	color := canvas.Black()
 	for _, light := range w.Lights {
 		m := c.Object.GetMaterial()
-		c := light.Lighting(m, c.Point, c.Eye, c.Normal)
+		isShadowed := light.IsShadowed(w, c.OverPoint)
+		c := light.Lighting(m, c.OverPoint, c.Eye, c.Normal, isShadowed)
 		color = color.Add(c)
 	}
 	return color

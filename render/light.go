@@ -8,7 +8,8 @@ import (
 )
 
 type Light interface {
-	Lighting(m *Material, p, eye, normal alg.Vector) canvas.Color
+	Lighting(m *Material, p, eye, normal alg.Vector, isShadowed bool) canvas.Color
+	IsShadowed(w *World, p alg.Vector) bool
 }
 
 type PointLight struct {
@@ -20,10 +21,13 @@ func NewPointLight(pos alg.Vector, intensity canvas.Color) *PointLight {
 	return &PointLight{Position: pos, Intensity: intensity}
 }
 
-func (l *PointLight) Lighting(m *Material, p, eye, normal alg.Vector) canvas.Color {
+func (l *PointLight) Lighting(m *Material, p, eye, normal alg.Vector, isShadowed bool) canvas.Color {
 	ec := m.Color.Mul(l.Intensity)
-	lv := l.Position.Sub(p).Norm()
 	amb := ec.Scale(m.Ambient)
+	if isShadowed {
+		return amb
+	}
+	lv := l.Position.Sub(p).Norm()
 	dif := canvas.Black()
 	spe := canvas.Black()
 	ldn := lv.Dot(normal)
@@ -37,4 +41,14 @@ func (l *PointLight) Lighting(m *Material, p, eye, normal alg.Vector) canvas.Col
 		}
 	}
 	return amb.Add(dif).Add(spe)
+}
+
+func (l *PointLight) IsShadowed(w *World, p alg.Vector) bool {
+	v := l.Position.Sub(p)
+	distance := v.Mag()
+	direction := v.Norm()
+	r := NewRay(p, direction)
+	xxs := w.intersect(r)
+	hit := xxs.Hit()
+	return hit != nil && hit.Distance < distance
 }
