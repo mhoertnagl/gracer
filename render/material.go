@@ -6,6 +6,7 @@ import (
 
 type Material struct {
 	Color     canvas.Color
+	Pattern   Pattern
 	Ambient   float64
 	Diffuse   float64
 	Specular  float64
@@ -14,7 +15,8 @@ type Material struct {
 
 func NewMaterial() *Material {
 	return &Material{
-		Color:     canvas.NewColor(1, 1, 1),
+		Color:     canvas.White,
+		Pattern:   nil,
 		Ambient:   0.1,
 		Diffuse:   0.9,
 		Specular:  0.9,

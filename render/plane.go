@@ -40,3 +40,7 @@ func (p *Plane) NormalAt(point alg.Vector) alg.Vector {
 func (p *Plane) GetMaterial() *Material {
 	return p.Material
 }
+
+func (p *Plane) GetTransform() alg.Matrix {
+	return p.Transform
+}

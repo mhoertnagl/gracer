@@ -6,4 +6,5 @@ type Object interface {
 	Intersect(r *Ray) Intersections
 	NormalAt(p alg.Vector) alg.Vector
 	GetMaterial() *Material
+	GetTransform() alg.Matrix
 }

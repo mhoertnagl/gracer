@@ -17,7 +17,14 @@ func main() {
 	// wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
 	// wallMaterial.Specular = 0
 
+	p1 := render.NewSolidPattern(canvas.White)
+	p2 := render.NewSolidPattern(canvas.NewColor(0.1, 1, 0.5))
+	pattern := render.NewStripePattern(p1, p2)
+	pattern.Transform = alg.Scaling(2, 1, 1)
+
 	floor := render.NewPlane()
+	floor.Transform = alg.RotationY(math.Pi / 5)
+	floor.Material.Pattern = pattern
 
 	// floor := render.NewSphere()
 	// floor.Transform = alg.Scaling(10, 0.01, 10)
@@ -41,6 +48,7 @@ func main() {
 
 	middle := render.NewSphere()
 	middle.Transform = alg.Translation(-0.5, 1, 0.5)
+	middle.Material.Pattern = pattern
 	middle.Material.Color = canvas.NewColor(0.1, 1, 0.5)
 	middle.Material.Diffuse = 0.7
 	middle.Material.Specular = 0.3
@@ -61,8 +69,8 @@ func main() {
 	left.Material.Diffuse = 0.7
 	left.Material.Specular = 0.3
 
-	light := render.NewPointLight(alg.NewPoint(-10, 10, -10), canvas.White())
-	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White())
+	light := render.NewPointLight(alg.NewPoint(-10, 10, -10), canvas.White)
+	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White)
 
 	world := render.NewWorld()
 	world.AddLight(light)

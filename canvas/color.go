@@ -10,16 +10,11 @@ import (
 
 type Color alg.Vector
 
+var Black = NewColor(0, 0, 0)
+var White = NewColor(1, 1, 1)
+
 func NewColor(r, g, b float64) Color {
 	return Color(alg.NewVector(r, g, b))
-}
-
-func Black() Color {
-	return NewColor(0, 0, 0)
-}
-
-func White() Color {
-	return NewColor(1, 1, 1)
 }
 
 func (c Color) String() string {

@@ -49,3 +49,7 @@ func (s *Sphere) NormalAt(p alg.Vector) alg.Vector {
 func (s *Sphere) GetMaterial() *Material {
 	return s.Material
 }
+
+func (s *Sphere) GetTransform() alg.Matrix {
+	return s.Transform
+}

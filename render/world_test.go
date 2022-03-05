@@ -62,7 +62,7 @@ func TestShadingAnIntersection(t *testing.T) {
 func TestShadingAnIntersectionFromTheInside(t *testing.T) {
 	e := canvas.NewColor(0.90498, 0.90498, 0.90498)
 	w := newDefaultWorldWithoutLight()
-	l := NewPointLight(alg.NewPoint(0, 0.25, 0), canvas.White())
+	l := NewPointLight(alg.NewPoint(0, 0.25, 0), canvas.White)
 	w.AddLight(l)
 	r := NewRay(alg.Origin, alg.NewVector3(0, 0, 1))
 	s := w.Objects[1]
@@ -75,7 +75,7 @@ func TestTheColorWhenTheRayMisses(t *testing.T) {
 	w := newDefaultWorld()
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 1, 0))
 	c := w.colorAt(r)
-	AssertColorEqual(t, c, canvas.Black())
+	AssertColorEqual(t, c, canvas.Black)
 }
 
 func TestTheColorWhenTheRayHits(t *testing.T) {
@@ -108,7 +108,7 @@ func TestTheHitShouldOffsetThePoint(t *testing.T) {
 func newDefaultWorld() *World {
 	w := NewWorld()
 	lp := alg.NewPoint(-10, 10, -10)
-	l := NewPointLight(lp, canvas.White())
+	l := NewPointLight(lp, canvas.White)
 	s1 := NewSphere()
 	s1.Material.Color = canvas.NewColor(0.8, 1.0, 0.6)
 	s1.Material.Diffuse = 0.7

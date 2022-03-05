@@ -47,7 +47,7 @@ func (w *World) colorAt(r *Ray) canvas.Color {
 		c := prepareComps(hit, r)
 		return w.shade(c)
 	}
-	return canvas.Black()
+	return canvas.Black
 }
 
 func (w *World) intersect(r *Ray) Intersections {
@@ -89,11 +89,10 @@ func prepareComps(i *Intersection, r *Ray) *comps {
 }
 
 func (w *World) shade(c *comps) canvas.Color {
-	color := canvas.Black()
+	color := canvas.Black
 	for _, light := range w.Lights {
-		m := c.Object.GetMaterial()
 		isShadowed := light.IsShadowed(w, c.OverPoint)
-		c := light.Lighting(m, c.OverPoint, c.Eye, c.Normal, isShadowed)
+		c := light.Lighting(c.Object, c.OverPoint, c.Eye, c.Normal, isShadowed)
 		color = color.Add(c)
 	}
 	return color

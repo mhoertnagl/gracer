@@ -8,7 +8,7 @@ import (
 )
 
 type Light interface {
-	Lighting(m *Material, p, eye, normal alg.Vector, isShadowed bool) canvas.Color
+	Lighting(obj Object, p, eye, normal alg.Vector, isShadowed bool) canvas.Color
 	IsShadowed(w *World, p alg.Vector) bool
 }
 
@@ -21,15 +21,20 @@ func NewPointLight(pos alg.Vector, intensity canvas.Color) *PointLight {
 	return &PointLight{Position: pos, Intensity: intensity}
 }
 
-func (l *PointLight) Lighting(m *Material, p, eye, normal alg.Vector, isShadowed bool) canvas.Color {
-	ec := m.Color.Mul(l.Intensity)
+func (l *PointLight) Lighting(obj Object, p, eye, normal alg.Vector, isShadowed bool) canvas.Color {
+	m := obj.GetMaterial()
+	color := m.Color
+	if m.Pattern != nil {
+		color = m.Pattern.ColorAt(obj, p)
+	}
+	ec := color.Mul(l.Intensity)
 	amb := ec.Scale(m.Ambient)
 	if isShadowed {
 		return amb
 	}
 	lv := l.Position.Sub(p).Norm()
-	dif := canvas.Black()
-	spe := canvas.Black()
+	dif := canvas.Black
+	spe := canvas.Black
 	ldn := lv.Dot(normal)
 	if ldn > 0 {
 		dif = ec.Scale(m.Diffuse * ldn)
