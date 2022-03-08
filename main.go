@@ -69,6 +69,7 @@ func main() {
 	right.Material.Color = canvas.NewColor(0.5, 1, 0.1)
 	right.Material.Diffuse = 0.7
 	right.Material.Specular = 0.3
+	right.Material.Shininess = 10
 
 	left := render.NewSphere()
 	left.Transform = alg.

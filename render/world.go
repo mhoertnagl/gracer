@@ -70,6 +70,7 @@ type comps struct {
 	OverPoint alg.Vector
 	Eye       alg.Vector
 	Normal    alg.Vector
+	Reflect   alg.Vector
 	Inside    bool
 }
 
@@ -85,6 +86,7 @@ func prepareComps(i *Intersection, r *Ray) *comps {
 		c.Normal = c.Normal.Neg()
 	}
 	c.OverPoint = c.Point.Add(c.Normal.Mult(EPSILON))
+	c.Reflect = r.Direction.Reflect(c.Normal)
 	return c
 }
 

@@ -1,6 +1,7 @@
 package render
 
 import (
+	"math"
 	"testing"
 
 	"github.com/mhoertnagl/gracer/alg"
@@ -103,6 +104,15 @@ func TestTheHitShouldOffsetThePoint(t *testing.T) {
 	c := prepareComps(i, r)
 	AssertTrue(t, c.OverPoint[2] < -EPSILON/2)
 	AssertTrue(t, c.Point[2] > c.OverPoint[2])
+}
+
+func TestPrecomputingTheReflectionVector(t *testing.T) {
+	f := math.Sqrt2 / 2
+	r := NewRay(alg.NewPoint(0, 1, -1), alg.NewVector3(0, -f, f))
+	s := NewPlane()
+	i := NewIntersection(math.Sqrt2, s)
+	c := prepareComps(i, r)
+	AssertVectorEqual(t, c.Reflect, alg.NewVector3(0, f, f))
 }
 
 func newDefaultWorld() *World {
