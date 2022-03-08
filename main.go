@@ -17,14 +17,18 @@ func main() {
 	// wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
 	// wallMaterial.Specular = 0
 
-	p1 := render.NewSolidPattern(canvas.White)
-	p2 := render.NewSolidPattern(canvas.NewColor(0.1, 1, 0.5))
-	pattern := render.NewStripePattern(p1, p2)
-	pattern.Transform = alg.Scaling(2, 1, 1)
+	pm1 := render.NewSolidPattern(canvas.White)
+	pm2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
+	pm3 := render.NewStripePattern(pm1, pm2)
+	pm4 := render.NewStripePattern(pm1, pm2)
+	pm4.Transform = alg.RotationY(math.Pi / 2)
+	pm5 := render.NewBlendedPattern(pm3, pm4)
+
+	// pattern.Transform = alg.Scaling(2, 1, 1)
 
 	floor := render.NewPlane()
-	floor.Transform = alg.RotationY(math.Pi / 5)
-	floor.Material.Pattern = pattern
+	// floor.Transform = alg.RotationY(math.Pi / 5)
+	floor.Material.Pattern = pm5
 
 	// floor := render.NewSphere()
 	// floor.Transform = alg.Scaling(10, 0.01, 10)
@@ -46,9 +50,14 @@ func main() {
 	// 	MultMat(alg.Scaling(10, 0.01, 10))
 	// rightWall.Material = wallMaterial
 
+	p1 := render.NewSolidPattern(canvas.White)
+	p2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
+	p3 := render.NewRingPattern(p1, p2)
+	p3.Transform = alg.Scaling(0.1, 0.1, 0.1)
+
 	middle := render.NewSphere()
 	middle.Transform = alg.Translation(-0.5, 1, 0.5)
-	middle.Material.Pattern = pattern
+	middle.Material.Pattern = p3
 	middle.Material.Color = canvas.NewColor(0.1, 1, 0.5)
 	middle.Material.Diffuse = 0.7
 	middle.Material.Specular = 0.3
@@ -84,7 +93,8 @@ func main() {
 
 	camera := render.NewCamera(300, 150, math.Pi/3)
 	camera.Transform = render.ViewTransform(
-		alg.NewPoint(0, 1.5, -5),
+		// alg.NewPoint(0, 1.5, -5),
+		alg.NewPoint(0, 3, -5),
 		alg.NewPoint(0, 1, 0),
 		alg.NewVector3(0, 1, 0),
 	)
