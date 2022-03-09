@@ -24,7 +24,7 @@ func (p *Plane) Intersect(r *Ray) Intersections {
 		return Intersections{}
 	}
 	return Intersections{
-		NewIntersection(-r.Origin[1]/r.Direction[1], p),
+		NewIntersection(-or.Origin[1]/or.Direction[1], p),
 	}
 }
 

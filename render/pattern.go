@@ -50,31 +50,6 @@ func (p *StripePattern) ColorAt(object Object, point alg.Vector) canvas.Color {
 	return p.b.ColorAt(object, patternPoint)
 }
 
-type Checkers2DPattern struct {
-	a         Pattern
-	b         Pattern
-	Transform alg.Matrix
-}
-
-func NewCheckers2DPattern(a Pattern, b Pattern) *Checkers2DPattern {
-	return &Checkers2DPattern{
-		a:         a,
-		b:         b,
-		Transform: alg.Id4,
-	}
-}
-
-func (p *Checkers2DPattern) ColorAt(object Object, point alg.Vector) canvas.Color {
-	objectPoint := alg.Inverse(object.GetTransform()).MultVec(point)
-	patternPoint := alg.Inverse(p.Transform).MultVec(objectPoint)
-	x := math.Floor(patternPoint[0])
-	y := math.Floor(patternPoint[1])
-	if math.Mod(x+y, 2) == 0 {
-		return p.a.ColorAt(object, patternPoint)
-	}
-	return p.b.ColorAt(object, patternPoint)
-}
-
 type Checkers3DPattern struct {
 	a         Pattern
 	b         Pattern

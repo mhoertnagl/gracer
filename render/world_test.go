@@ -115,6 +115,30 @@ func TestPrecomputingTheReflectionVector(t *testing.T) {
 	AssertVectorEqual(t, c.Reflect, alg.NewVector3(0, f, f))
 }
 
+func TestTheReflectedColorForANonreflectiveMaterial(t *testing.T) {
+	w := newDefaultWorld()
+	w.Objects[1].GetMaterial().Ambient = 1
+	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 0, 1))
+	i := NewIntersection(1, w.Objects[1])
+	c := prepareComps(i, r)
+	color := w.reflectedColor(c)
+	AssertColorEqual(t, color, canvas.Black)
+}
+
+func TestTheReflectedColorForAReflectiveMaterial(t *testing.T) {
+	f := math.Sqrt2 / 2
+	w := newDefaultWorld()
+	s := NewPlane()
+	s.Material.Reflective = 0.5
+	s.Transform = alg.Translation(0, -1, 0)
+	w.AddObject(s)
+	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
+	i := NewIntersection(math.Sqrt2, s)
+	c := prepareComps(i, r)
+	color := w.reflectedColor(c)
+	AssertColorEqual(t, color, canvas.NewColor(0.190321, 0.237913, 0.142748))
+}
+
 func newDefaultWorld() *World {
 	w := NewWorld()
 	lp := alg.NewPoint(-10, 10, -10)

@@ -19,10 +19,11 @@ func main() {
 
 	pm1 := render.NewSolidPattern(canvas.White)
 	pm2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
-	pm3 := render.NewStripePattern(pm1, pm2)
-	pm4 := render.NewStripePattern(pm1, pm2)
-	pm4.Transform = alg.RotationY(math.Pi / 2)
-	pm5 := render.NewBlendedPattern(pm3, pm4)
+	// pm3 := render.NewStripePattern(pm1, pm2)
+	// pm4 := render.NewStripePattern(pm1, pm2)
+	// pm4.Transform = alg.RotationY(math.Pi / 2)
+	// pm5 := render.NewBlendedPattern(pm3, pm4)
+	pm5 := render.NewCheckers3DPattern(pm1, pm2)
 
 	// pattern.Transform = alg.Scaling(2, 1, 1)
 

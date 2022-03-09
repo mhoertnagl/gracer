@@ -99,3 +99,13 @@ func (w *World) shade(c *comps) canvas.Color {
 	}
 	return color
 }
+
+func (w *World) reflectedColor(c *comps) canvas.Color {
+	material := c.Object.GetMaterial()
+	if material.Reflective == 0 {
+		return canvas.Black
+	}
+	r := NewRay(c.OverPoint, c.Reflect)
+	color := w.colorAt(r)
+	return color.Scale(material.Reflective)
+}
