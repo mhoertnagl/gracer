@@ -10,14 +10,16 @@ import (
 const EPSILON = 2.220446049250313e-8
 
 type World struct {
-	Lights  []Light
-	Objects []Object
+	Lights         []Light
+	Objects        []Object
+	MaxReflections int
 }
 
 func NewWorld() *World {
 	return &World{
-		Lights:  make([]Light, 0),
-		Objects: make([]Object, 0),
+		Lights:         make([]Light, 0),
+		Objects:        make([]Object, 0),
+		MaxReflections: 5,
 	}
 }
 
@@ -34,18 +36,18 @@ func (world *World) Render(camera *Camera) *canvas.Canvas {
 	for y := 0; y < camera.vsize; y++ {
 		for x := 0; x < camera.hsize; x++ {
 			ray := camera.RayForPixel(x, y)
-			color := world.colorAt(ray)
+			color := world.colorAt(ray, world.MaxReflections)
 			canvas.Set(x, y, color)
 		}
 	}
 	return canvas
 }
 
-func (w *World) colorAt(r *Ray) canvas.Color {
+func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	xs := w.intersect(r)
 	if hit := xs.Hit(); hit != nil {
 		c := prepareComps(hit, r)
-		return w.shade(c)
+		return w.shade(c, remaining)
 	}
 	return canvas.Black
 }
@@ -90,22 +92,26 @@ func prepareComps(i *Intersection, r *Ray) *comps {
 	return c
 }
 
-func (w *World) shade(c *comps) canvas.Color {
+func (w *World) shade(c *comps, remaining int) canvas.Color {
 	color := canvas.Black
 	for _, light := range w.Lights {
 		isShadowed := light.IsShadowed(w, c.OverPoint)
-		c := light.Lighting(c.Object, c.OverPoint, c.Eye, c.Normal, isShadowed)
-		color = color.Add(c)
+		surface := light.Lighting(c.Object, c.OverPoint, c.Eye, c.Normal, isShadowed)
+		color = color.Add(surface)
 	}
-	return color
+	reflected := w.reflectedColor(c, remaining)
+	return color.Add(reflected)
 }
 
-func (w *World) reflectedColor(c *comps) canvas.Color {
+func (w *World) reflectedColor(c *comps, remaining int) canvas.Color {
+	if remaining <= 0 {
+		return canvas.Black
+	}
 	material := c.Object.GetMaterial()
 	if material.Reflective == 0 {
 		return canvas.Black
 	}
 	r := NewRay(c.OverPoint, c.Reflect)
-	color := w.colorAt(r)
+	color := w.colorAt(r, remaining-1)
 	return color.Scale(material.Reflective)
 }

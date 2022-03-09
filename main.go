@@ -30,6 +30,7 @@ func main() {
 	floor := render.NewPlane()
 	// floor.Transform = alg.RotationY(math.Pi / 5)
 	floor.Material.Pattern = pm5
+	floor.Material.Reflective = 0.3
 
 	// floor := render.NewSphere()
 	// floor.Transform = alg.Scaling(10, 0.01, 10)
@@ -96,7 +97,7 @@ func main() {
 	camera := render.NewCamera(300, 150, math.Pi/3)
 	camera.Transform = render.ViewTransform(
 		// alg.NewPoint(0, 1.5, -5),
-		alg.NewPoint(0, 3, -5),
+		alg.NewPoint(0, 5, -8),
 		alg.NewPoint(0, 1, 0),
 		alg.NewVector3(0, 1, 0),
 	)
