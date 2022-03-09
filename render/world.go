@@ -10,16 +10,16 @@ import (
 const EPSILON = 2.220446049250313e-8
 
 type World struct {
-	Lights         []Light
-	Objects        []Object
-	MaxReflections int
+	Lights     []Light
+	Objects    []Object
+	MaxBounces int
 }
 
 func NewWorld() *World {
 	return &World{
-		Lights:         make([]Light, 0),
-		Objects:        make([]Object, 0),
-		MaxReflections: 5,
+		Lights:     make([]Light, 0),
+		Objects:    make([]Object, 0),
+		MaxBounces: 5,
 	}
 }
 
@@ -36,7 +36,7 @@ func (world *World) Render(camera *Camera) *canvas.Canvas {
 	for y := 0; y < camera.vsize; y++ {
 		for x := 0; x < camera.hsize; x++ {
 			ray := camera.RayForPixel(x, y)
-			color := world.colorAt(ray, world.MaxReflections)
+			color := world.colorAt(ray, world.MaxBounces)
 			canvas.Set(x, y, color)
 		}
 	}

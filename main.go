@@ -52,17 +52,18 @@ func main() {
 	// 	MultMat(alg.Scaling(10, 0.01, 10))
 	// rightWall.Material = wallMaterial
 
-	p1 := render.NewSolidPattern(canvas.White)
-	p2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
-	p3 := render.NewRingPattern(p1, p2)
-	p3.Transform = alg.Scaling(0.1, 0.1, 0.1)
+	// p1 := render.NewSolidPattern(canvas.White)
+	// p2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
+	// p3 := render.NewRingPattern(p1, p2)
+	// p3.Transform = alg.Scaling(0.1, 0.1, 0.1)
 
 	middle := render.NewSphere()
 	middle.Transform = alg.Translation(-0.5, 1, 0.5)
-	middle.Material.Pattern = p3
+	// middle.Material.Pattern = p3
 	middle.Material.Color = canvas.NewColor(0.1, 1, 0.5)
 	middle.Material.Diffuse = 0.7
 	middle.Material.Specular = 0.3
+	middle.Material.Reflective = 0.1
 
 	right := render.NewSphere()
 	right.Transform = alg.

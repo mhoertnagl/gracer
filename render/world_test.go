@@ -57,7 +57,7 @@ func TestShadingAnIntersection(t *testing.T) {
 	s := w.Objects[0]
 	i := NewIntersection(4, s)
 	c := prepareComps(i, r)
-	AssertColorEqual(t, w.shade(c, w.MaxReflections), e)
+	AssertColorEqual(t, w.shade(c, w.MaxBounces), e)
 }
 
 func TestShadingAnIntersectionFromTheInside(t *testing.T) {
@@ -69,13 +69,13 @@ func TestShadingAnIntersectionFromTheInside(t *testing.T) {
 	s := w.Objects[1]
 	i := NewIntersection(0.5, s)
 	c := prepareComps(i, r)
-	AssertColorEqual(t, w.shade(c, w.MaxReflections), e)
+	AssertColorEqual(t, w.shade(c, w.MaxBounces), e)
 }
 
 func TestTheColorWhenTheRayMisses(t *testing.T) {
 	w := newDefaultWorld()
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 1, 0))
-	c := w.colorAt(r, w.MaxReflections)
+	c := w.colorAt(r, w.MaxBounces)
 	AssertColorEqual(t, c, canvas.Black)
 }
 
@@ -83,7 +83,7 @@ func TestTheColorWhenTheRayHits(t *testing.T) {
 	e := canvas.NewColor(0.38066, 0.47583, 0.2855)
 	w := newDefaultWorld()
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
-	c := w.colorAt(r, w.MaxReflections)
+	c := w.colorAt(r, w.MaxBounces)
 	AssertColorEqual(t, c, e)
 }
 
@@ -92,7 +92,7 @@ func TestTheColorWithAnIntersectionBehindTheRay(t *testing.T) {
 	w.Objects[0].GetMaterial().Ambient = 1
 	w.Objects[1].GetMaterial().Ambient = 1
 	r := NewRay(alg.NewPoint(0, 0, 0.75), alg.NewVector3(0, 0, -1))
-	c := w.colorAt(r, w.MaxReflections)
+	c := w.colorAt(r, w.MaxBounces)
 	AssertColorEqual(t, c, w.Objects[1].GetMaterial().Color)
 }
 
@@ -121,7 +121,7 @@ func TestTheReflectedColorForANonreflectiveMaterial(t *testing.T) {
 	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 0, 1))
 	i := NewIntersection(1, w.Objects[1])
 	c := prepareComps(i, r)
-	color := w.reflectedColor(c, w.MaxReflections)
+	color := w.reflectedColor(c, w.MaxBounces)
 	AssertColorEqual(t, color, canvas.Black)
 }
 
@@ -135,7 +135,7 @@ func TestTheReflectedColorForAReflectiveMaterial(t *testing.T) {
 	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
 	i := NewIntersection(math.Sqrt2, s)
 	c := prepareComps(i, r)
-	color := w.reflectedColor(c, w.MaxReflections)
+	color := w.reflectedColor(c, w.MaxBounces)
 	AssertColorEqual(t, color, canvas.NewColor(0.190321, 0.237913, 0.142748))
 }
 
@@ -149,7 +149,7 @@ func TestTheShadeHitWithReflectiveMaterial(t *testing.T) {
 	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
 	i := NewIntersection(math.Sqrt2, s)
 	c := prepareComps(i, r)
-	color := w.shade(c, w.MaxReflections)
+	color := w.shade(c, w.MaxBounces)
 	AssertColorEqual(t, color, canvas.NewColor(0.876756, 0.924339, 0.829173))
 }
 
@@ -167,7 +167,7 @@ func TestTheShadeHitWithReflectiveMaterial(t *testing.T) {
 // 	w.AddObject(p1)
 // 	w.AddObject(p2)
 // 	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 1, 0))
-// 	color := w.colorAt(r, w.MaxReflections)
+// 	color := w.colorAt(r, w.MaxBounces)
 // 	AssertColorEqual(t, color, canvas.NewColor(0.876756, 0.924339, 0.829173))
 // }
 
@@ -212,4 +212,10 @@ func newDefaultWorldWithoutLight() *World {
 	w.AddObject(s1)
 	w.AddObject(s2)
 	return w
+}
+
+func newGlassSphere() *Sphere {
+	s := NewSphere()
+	s.Material.Transparency = 1
+	s.Material.RefrctiveIndex = 1.5
 }
