@@ -3,7 +3,6 @@ package render
 import (
 	"sort"
 
-	"github.com/mhoertnagl/gracer/alg"
 	"github.com/mhoertnagl/gracer/canvas"
 )
 
@@ -46,7 +45,7 @@ func (world *World) Render(camera *Camera) *canvas.Canvas {
 func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	xs := w.intersect(r)
 	if hit := xs.Hit(); hit != nil {
-		c := prepareComps(hit, r)
+		c := prepareComps(hit, r, xs)
 		return w.shade(c, remaining)
 	}
 	return canvas.Black
@@ -62,34 +61,6 @@ func (w *World) intersect(r *Ray) Intersections {
 		return xxs[i].Distance < xxs[j].Distance
 	})
 	return xxs
-}
-
-// TODO: Why isn't this part of the intersection?
-type comps struct {
-	Distance  float64
-	Object    Object
-	Point     alg.Vector
-	OverPoint alg.Vector
-	Eye       alg.Vector
-	Normal    alg.Vector
-	Reflect   alg.Vector
-	Inside    bool
-}
-
-func prepareComps(i *Intersection, r *Ray) *comps {
-	c := &comps{}
-	c.Distance = i.Distance
-	c.Object = i.Object
-	c.Point = r.Position(i.Distance)
-	c.Eye = r.Direction.Neg()
-	c.Normal = i.Object.NormalAt(c.Point)
-	if c.Normal.Dot(c.Eye) < 0 {
-		c.Inside = true
-		c.Normal = c.Normal.Neg()
-	}
-	c.OverPoint = c.Point.Add(c.Normal.Mult(EPSILON))
-	c.Reflect = r.Direction.Reflect(c.Normal)
-	return c
 }
 
 func (w *World) shade(c *comps, remaining int) canvas.Color {
@@ -114,4 +85,18 @@ func (w *World) reflectedColor(c *comps, remaining int) canvas.Color {
 	r := NewRay(c.OverPoint, c.Reflect)
 	color := w.colorAt(r, remaining-1)
 	return color.Scale(material.Reflective)
+}
+
+func (w *World) refractedColor(c *comps, remaining int) canvas.Color {
+	if remaining <= 0 {
+		return canvas.Black
+	}
+	material := c.Object.GetMaterial()
+	if material.Transparency == 0 {
+		return canvas.Black
+	}
+	return canvas.White
+	// r := NewRay(c.OverPoint, c.Reflect)
+	// color := w.colorAt(r, remaining-1)
+	// return color.Scale(material.Reflective)
 }
