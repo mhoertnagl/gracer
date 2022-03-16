@@ -70,7 +70,7 @@ func prepareComps(hit *Intersection, r *Ray, xs Intersections) *comps {
 			} else {
 				elem := containers.Back()
 				obj := elem.Value.(Object)
-				c.N1 = obj.GetMaterial().RefrctiveIndex
+				c.N1 = obj.GetMaterial().RefractiveIndex
 			}
 		}
 
@@ -78,6 +78,7 @@ func prepareComps(hit *Intersection, r *Ray, xs Intersections) *comps {
 			containers.Remove(elem)
 		} else {
 			containers.PushBack(x.Object)
+			// containers.PushFront(x.Object)
 		}
 
 		if x == hit {
@@ -86,7 +87,7 @@ func prepareComps(hit *Intersection, r *Ray, xs Intersections) *comps {
 			} else {
 				elem := containers.Back()
 				obj := elem.Value.(Object)
-				c.N2 = obj.GetMaterial().RefrctiveIndex
+				c.N2 = obj.GetMaterial().RefractiveIndex
 			}
 		}
 	}

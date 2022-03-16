@@ -1,12 +1,14 @@
 package render
 
 import (
+	"math"
 	"sort"
+	"sync"
 
 	"github.com/mhoertnagl/gracer/canvas"
 )
 
-const EPSILON = 2.220446049250313e-8
+const EPSILON = 2.220446049250313e-6
 
 type World struct {
 	Lights     []Light
@@ -30,17 +32,109 @@ func (w *World) AddObject(object Object) {
 	w.Objects = append(w.Objects, object)
 }
 
+// func (world *World) Render(camera *Camera) *canvas.Canvas {
+// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
+// 	for y := 0; y < camera.vsize; y++ {
+// 		for x := 0; x < camera.hsize; x++ {
+// 			ray := camera.RayForPixel(x, y)
+// 			color := world.colorAt(ray, world.MaxBounces)
+// 			canvas.Set(x, y, color)
+// 		}
+// 	}
+// 	return canvas
+// }
+
+// func (world *World) Render(camera *Camera) *canvas.Canvas {
+// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
+// 	ch := make(chan struct{}, camera.vsize)
+// 	wg := sync.WaitGroup{}
+// 	for y := 0; y < camera.vsize; y++ {
+// 		wg.Add(1)
+// 		go func(y int, ch chan struct{}, wg *sync.WaitGroup) {
+// 			for x := 0; x < camera.hsize; x++ {
+// 				ray := camera.RayForPixel(x, y)
+// 				color := world.colorAt(ray, world.MaxBounces)
+// 				canvas.Set(x, y, color)
+// 			}
+// 			ch <- struct{}{}
+// 			wg.Done()
+// 		}(y, ch, &wg)
+// 	}
+// 	wg.Wait()
+// 	close(ch)
+// 	return canvas
+// }
+
+type line struct {
+	y  int
+	xs []canvas.Color
+}
+
+func newLine(y int, len int) *line {
+	return &line{
+		y:  y,
+		xs: make([]canvas.Color, len),
+	}
+}
+
 func (world *World) Render(camera *Camera) *canvas.Canvas {
 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
+	ch := make(chan *line, camera.vsize)
+	wg := sync.WaitGroup{}
 	for y := 0; y < camera.vsize; y++ {
+		wg.Add(1)
+		go renderLine(world, camera, y, ch, &wg)
+	}
+	wg.Wait()
+	close(ch)
+	for line := range ch {
 		for x := 0; x < camera.hsize; x++ {
-			ray := camera.RayForPixel(x, y)
-			color := world.colorAt(ray, world.MaxBounces)
-			canvas.Set(x, y, color)
+			canvas.Set(x, line.y, line.xs[x])
 		}
 	}
 	return canvas
 }
+
+func renderLine(world *World, camera *Camera, y int, ch chan *line, wg *sync.WaitGroup) {
+	line := newLine(y, camera.hsize)
+	for x := 0; x < camera.hsize; x++ {
+		ray := camera.RayForPixel(x, y)
+		color := world.colorAt(ray, world.MaxBounces)
+		line.xs[x] = color
+	}
+	ch <- line
+	wg.Done()
+}
+
+// type pixel struct {
+// 	x     int
+// 	y     int
+// 	color canvas.Color
+// }
+
+// func (world *World) Render(camera *Camera) *canvas.Canvas {
+// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
+// 	ch := make(chan *pixel, camera.vsize)
+// 	wg := sync.WaitGroup{}
+// 	for y := 0; y < camera.vsize; y++ {
+// 		for x := 0; x < camera.hsize; x++ {
+// 			wg.Add(1)
+// 			go func(y int, x int, ch chan *pixel, wg *sync.WaitGroup) {
+// 				ray := camera.RayForPixel(x, y)
+// 				color := world.colorAt(ray, world.MaxBounces)
+// 				// canvas.Set(x, y, color)
+// 				ch <- &pixel{y: y, x: x, color: color}
+// 				wg.Done()
+// 			}(y, x, ch, &wg)
+// 		}
+// 	}
+// 	wg.Wait()
+// 	close(ch)
+// 	for pixel := range ch {
+// 		canvas.Set(pixel.x, pixel.y, pixel.color)
+// 	}
+// 	return canvas
+// }
 
 func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	xs := w.intersect(r)
@@ -66,12 +160,16 @@ func (w *World) intersect(r *Ray) Intersections {
 func (w *World) shade(c *comps, remaining int) canvas.Color {
 	color := canvas.Black
 	for _, light := range w.Lights {
-		isShadowed := light.IsShadowed(w, c.OverPoint)
+		isShadowed := false
+		if c.Object.GetMaterial().ReceiveShadow {
+			isShadowed = light.IsShadowed(w, c.OverPoint)
+		}
 		surface := light.Lighting(c.Object, c.OverPoint, c.Eye, c.Normal, isShadowed)
 		color = color.Add(surface)
 	}
 	reflected := w.reflectedColor(c, remaining)
-	return color.Add(reflected)
+	refracted := w.refractedColor(c, remaining)
+	return color.Add(reflected).Add(refracted)
 }
 
 func (w *World) reflectedColor(c *comps, remaining int) canvas.Color {
@@ -95,8 +193,14 @@ func (w *World) refractedColor(c *comps, remaining int) canvas.Color {
 	if material.Transparency == 0 {
 		return canvas.Black
 	}
-	return canvas.White
-	// r := NewRay(c.OverPoint, c.Reflect)
-	// color := w.colorAt(r, remaining-1)
-	// return color.Scale(material.Reflective)
+	nratio := c.N1 / c.N2
+	cosi := c.Eye.Dot(c.Normal)
+	sin2t := nratio * nratio * (1.0 - cosi*cosi)
+	if sin2t > 1 {
+		return canvas.Black
+	}
+	cost := math.Sqrt(1.0 - sin2t)
+	direction := c.Normal.Mult(nratio*cosi - cost).Sub(c.Eye.Mult(nratio))
+	refractray := NewRay(c.UnderPoint, direction)
+	return w.colorAt(refractray, remaining-1).Scale(material.Transparency)
 }

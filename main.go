@@ -13,44 +13,39 @@ import (
 func main() {
 	defer timeTrack(time.Now(), "Ray Trace")
 
-	// wallMaterial := render.NewMaterial()
-	// wallMaterial.Color = canvas.NewColor(1, 0.9, 0.9)
-	// wallMaterial.Specular = 0
-
-	pm1 := render.NewSolidPattern(canvas.White)
-	pm2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
-	// pm3 := render.NewStripePattern(pm1, pm2)
-	// pm4 := render.NewStripePattern(pm1, pm2)
-	// pm4.Transform = alg.RotationY(math.Pi / 2)
-	// pm5 := render.NewBlendedPattern(pm3, pm4)
+	pm1 := render.NewSolidPattern(canvas.Black)
+	pm2 := render.NewSolidPattern(canvas.White)
 	pm5 := render.NewCheckers3DPattern(pm1, pm2)
-
-	// pattern.Transform = alg.Scaling(2, 1, 1)
+	pm5.Transform = alg.Scaling(1, 1, 1)
 
 	floor := render.NewPlane()
-	// floor.Transform = alg.RotationY(math.Pi / 5)
 	floor.Material.Pattern = pm5
-	floor.Material.Reflective = 0.3
+	// floor.Material.Reflective = 0.3
+	floor.Material.Specular = 0.1
+	floor.Material.Shininess = 10
+	floor.Material.ReceiveShadow = false
 
-	// floor := render.NewSphere()
-	// floor.Transform = alg.Scaling(10, 0.01, 10)
-	// floor.Material = wallMaterial
+	leftWall := render.NewPlane()
+	leftWall.Transform = alg.
+		Translation(0, 0, 5).
+		MultMat(alg.RotationY(-math.Pi / 4)).
+		MultMat(alg.RotationX(math.Pi / 2))
+	leftWall.Material.Pattern = pm5
+	// leftWall.Material.Reflective = 0.3
+	leftWall.Material.Specular = 0.1
+	leftWall.Material.Shininess = 10
+	leftWall.Material.ReceiveShadow = false
 
-	// leftWall := render.NewSphere()
-	// leftWall.Transform = alg.
-	// 	Translation(0, 0, 5).
-	// 	MultMat(alg.RotationY(-math.Pi / 4)).
-	// 	MultMat(alg.RotationX(math.Pi / 2)).
-	// 	MultMat(alg.Scaling(10, 0.01, 10))
-	// leftWall.Material = wallMaterial
-
-	// rightWall := render.NewSphere()
-	// rightWall.Transform = alg.
-	// 	Translation(0, 0, 5).
-	// 	MultMat(alg.RotationY(math.Pi / 4)).
-	// 	MultMat(alg.RotationX(math.Pi / 2)).
-	// 	MultMat(alg.Scaling(10, 0.01, 10))
-	// rightWall.Material = wallMaterial
+	rightWall := render.NewPlane()
+	rightWall.Transform = alg.
+		Translation(0, 0, 5).
+		MultMat(alg.RotationY(math.Pi / 4)).
+		MultMat(alg.RotationX(math.Pi / 2))
+	rightWall.Material.Pattern = pm5
+	// rightWall.Material.Reflective = 0.3
+	rightWall.Material.Specular = 0.1
+	rightWall.Material.Shininess = 10
+	rightWall.Material.ReceiveShadow = false
 
 	// p1 := render.NewSolidPattern(canvas.White)
 	// p2 := render.NewSolidPattern(canvas.NewColor(0.5, 0.5, 0.5))
@@ -58,49 +53,79 @@ func main() {
 	// p3.Transform = alg.Scaling(0.1, 0.1, 0.1)
 
 	middle := render.NewSphere()
-	middle.Transform = alg.Translation(-0.5, 1, 0.5)
+	middle.Transform = alg.Translation(0, 3.8, 0)
 	// middle.Material.Pattern = p3
-	middle.Material.Color = canvas.NewColor(0.1, 1, 0.5)
-	middle.Material.Diffuse = 0.7
-	middle.Material.Specular = 0.3
-	middle.Material.Reflective = 0.1
+	middle.Material.Color = canvas.NewColor(0.1, 0.1, 0.1)
+	middle.Material.Ambient = 0.1
+	middle.Material.Diffuse = 0.1
+	middle.Material.Specular = 1.0
+	middle.Material.Shininess = 300
+	middle.Material.Reflective = 0.9
+	middle.Material.Transparency = 0.9
+	middle.Material.RefractiveIndex = 1.5
+	// middle.Material.ReceiveShadow = false
+
+	bubble := render.NewSphere()
+	bubble.Transform = alg.Translation(0, 3.8, 0).MultMat(alg.Scaling(0.5, 0.5, 0.5))
+	// middle.Material.Pattern = p3
+	bubble.Material.Color = canvas.NewColor(0.1, 0.1, 0.1)
+	bubble.Material.Ambient = 0.0
+	bubble.Material.Diffuse = 0.0
+	bubble.Material.Specular = 0.0 //1.0
+	// bubble.Material.Shininess = 300
+	bubble.Material.Reflective = 0.0
+	bubble.Material.Transparency = 1
+	bubble.Material.RefractiveIndex = 1.00029
+	bubble.Material.ReceiveShadow = false
 
 	right := render.NewSphere()
 	right.Transform = alg.
 		Translation(1.5, 0.5, -0.5).
 		MultMat(alg.Scaling(0.5, 0.5, 0.5))
-	right.Material.Color = canvas.NewColor(0.5, 1, 0.1)
-	right.Material.Diffuse = 0.7
-	right.Material.Specular = 0.3
-	right.Material.Shininess = 10
+	right.Material.Color = canvas.NewColor(0.1, 0, 0)
+	right.Material.Ambient = 0.0
+	right.Material.Diffuse = 0.1
+	right.Material.Specular = 1
+	right.Material.Shininess = 300
+	right.Material.Reflective = 0.9
+	right.Material.Transparency = 0.9
+	right.Material.RefractiveIndex = 1.52
 
 	left := render.NewSphere()
 	left.Transform = alg.
 		Translation(-1.5, 0.33, -0.75).
 		MultMat(alg.Scaling(0.33, 0.33, 0.33))
-	left.Material.Color = canvas.NewColor(1, 0.8, 0.1)
+	left.Material.Color = canvas.NewColor(0, 1, 0)
 	left.Material.Diffuse = 0.7
 	left.Material.Specular = 0.3
 
-	light := render.NewPointLight(alg.NewPoint(-10, 10, -10), canvas.White)
+	light := render.NewPointLight(alg.NewPoint(-50, 100, 150), canvas.NewColor(0.7, 0.7, 0.7))
 	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White)
 
 	world := render.NewWorld()
+	world.MaxBounces = 5
 	world.AddLight(light)
 	// world.AddLight(light2)
 	world.AddObject(floor)
 	// world.AddObject(leftWall)
 	// world.AddObject(rightWall)
+	// world.AddObject(leftWall)
+	// world.AddObject(rightWall)
 	world.AddObject(middle)
-	world.AddObject(right)
-	world.AddObject(left)
+	world.AddObject(bubble)
+	// world.AddObject(right)
+	// world.AddObject(left)
 
-	camera := render.NewCamera(300, 150, math.Pi/3)
+	//camera := render.NewCamera(300, 150, math.Pi/3)
+	// camera := render.NewCamera(1200, 1200, math.Pi/3)
+	camera := render.NewCamera(600, 600, math.Pi/3)
 	camera.Transform = render.ViewTransform(
-		// alg.NewPoint(0, 1.5, -5),
-		alg.NewPoint(0, 5, -8),
-		alg.NewPoint(0, 1, 0),
+		alg.NewPoint(0, 6, -5),
+		alg.NewPoint(0, 0, 0),
 		alg.NewVector3(0, 1, 0),
+		// alg.NewPoint(0, 6, 0),
+		// alg.NewPoint(0, 0, 0),
+		// alg.NewVector3(0, 0, 1),
 	)
 
 	canvas := world.Render(camera)

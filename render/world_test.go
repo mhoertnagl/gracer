@@ -130,7 +130,7 @@ func TestRefractedColorAtMaximumDepth(t *testing.T) {
 	w := newDefaultWorld()
 	s := w.Objects[0]
 	s.GetMaterial().Transparency = 1.0
-	s.GetMaterial().RefrctiveIndex = 1.5
+	s.GetMaterial().RefractiveIndex = 1.5
 	r := NewRay(alg.NewPoint(0, 0, -5), alg.NewVector3(0, 0, 1))
 	xs := NewIntersections(
 		NewIntersection(4, s),
@@ -139,6 +139,68 @@ func TestRefractedColorAtMaximumDepth(t *testing.T) {
 	c := prepareComps(xs[0], r, xs)
 	color := w.refractedColor(c, 0)
 	AssertColorEqual(t, color, canvas.Black)
+}
+
+func TestRefractedColorUnderTotalInternalReflection(t *testing.T) {
+	f := math.Sqrt2 / 2
+	w := newDefaultWorld()
+	s := w.Objects[0]
+	s.GetMaterial().Transparency = 1.0
+	s.GetMaterial().RefractiveIndex = 1.5
+	r := NewRay(alg.NewPoint(0, 0, f), alg.NewVector3(0, 1, 0))
+	xs := NewIntersections(
+		NewIntersection(-f, s),
+		NewIntersection(f, s),
+	)
+	// NOTE: We are inside the sphere so we need
+	// to look at the second intersection xs[1].
+	c := prepareComps(xs[1], r, xs)
+	color := w.refractedColor(c, 5)
+	AssertColorEqual(t, color, canvas.Black)
+}
+
+func TestRefractedColorWithARefractedRay(t *testing.T) {
+	w := newDefaultWorld()
+	a := w.Objects[0]
+	a.GetMaterial().Ambient = 1.0
+	a.GetMaterial().Pattern = newTestPattern()
+	b := w.Objects[1]
+	b.GetMaterial().Transparency = 1.0
+	b.GetMaterial().RefractiveIndex = 1.5
+	r := NewRay(alg.NewPoint(0, 0, 0.1), alg.NewVector3(0, 1, 0))
+	xs := NewIntersections(
+		NewIntersection(-0.9899, a),
+		NewIntersection(-0.4899, b),
+		NewIntersection(0.4899, b),
+		NewIntersection(0.9899, a),
+	)
+	// NOTE: We are inside the sphere so we need
+	// to look at the second intersection xs[1].
+	c := prepareComps(xs[2], r, xs)
+	color := w.refractedColor(c, 5)
+	AssertColorEqual(t, color, canvas.NewColor(0, 0.998885, 0.04725))
+}
+
+func TestShadeHitWithATransparentMaterial(t *testing.T) {
+	f := math.Sqrt2 / 2
+	w := newDefaultWorld()
+	floor := NewPlane()
+	floor.Transform = alg.Translation(0, -1, 0)
+	floor.Material.Transparency = 0.5
+	floor.Material.RefractiveIndex = 1.5
+	w.AddObject(floor)
+	ball := NewSphere()
+	ball.Transform = alg.Translation(0, -3.5, -0.5)
+	ball.Material.Color = canvas.NewColor(1, 0, 0)
+	ball.Material.Ambient = 0.5
+	w.AddObject(ball)
+	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
+	xs := NewIntersections(
+		NewIntersection(math.Sqrt2, floor),
+	)
+	c := prepareComps(xs[0], r, xs)
+	color := w.shade(c, w.MaxBounces)
+	AssertColorEqual(t, color, canvas.NewColor(0.93642, 0.686425, 0.686425))
 }
 
 func newDefaultWorld() *World {

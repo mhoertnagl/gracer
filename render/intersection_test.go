@@ -125,13 +125,13 @@ func TestPrecomputingTheReflectionVector(t *testing.T) {
 func TestFindingN1AndN2AtVariousIntersections(t *testing.T) {
 	a := newGlassSphere()
 	a.Transform = alg.Scaling(2, 2, 2)
-	a.Material.RefrctiveIndex = 1.5
+	a.Material.RefractiveIndex = 1.5
 	b := newGlassSphere()
 	b.Transform = alg.Translation(0, 0, -0.25)
-	b.Material.RefrctiveIndex = 2.0
+	b.Material.RefractiveIndex = 2.0
 	c := newGlassSphere()
 	c.Transform = alg.Translation(0, 0, 0.25)
-	c.Material.RefrctiveIndex = 2.5
+	c.Material.RefractiveIndex = 2.5
 	r := NewRay(alg.NewPoint(0, 0, -4), alg.NewVector3(0, 0, 1))
 	xs := NewIntersections(
 		NewIntersection(2, a),
@@ -172,6 +172,6 @@ func TestTheUnderPointIsOffsetBelowTheSurface(t *testing.T) {
 func newGlassSphere() *Sphere {
 	s := NewSphere()
 	s.Material.Transparency = 1
-	s.Material.RefrctiveIndex = 1.5
+	s.Material.RefractiveIndex = 1.5
 	return s
 }
