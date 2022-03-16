@@ -55,8 +55,8 @@ func main() {
 	middle := render.NewSphere()
 	middle.Transform = alg.Translation(0, 7, 0)
 	// middle.Material.Pattern = p3
-	middle.Material.Color = canvas.NewColor(0.3, 0.3, 0.3)
-	middle.Material.Ambient = 0.1
+	middle.Material.Color = canvas.NewColor(0.1, 0.1, 0.1)
+	middle.Material.Ambient = 0.2
 	middle.Material.Diffuse = 0.1
 	middle.Material.Specular = 1.0
 	middle.Material.Shininess = 300
