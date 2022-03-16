@@ -199,7 +199,7 @@ func TestShadeHitWithATransparentMaterial(t *testing.T) {
 		NewIntersection(math.Sqrt2, floor),
 	)
 	c := prepareComps(xs[0], r, xs)
-	color := w.shade(c, w.MaxBounces)
+	color := w.shade(c, 5)
 	AssertColorEqual(t, color, canvas.NewColor(0.93642, 0.686425, 0.686425))
 }
 

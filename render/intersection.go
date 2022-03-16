@@ -2,6 +2,7 @@ package render
 
 import (
 	"container/list"
+	"reflect"
 
 	"github.com/mhoertnagl/gracer/alg"
 )
@@ -78,7 +79,6 @@ func prepareComps(hit *Intersection, r *Ray, xs Intersections) *comps {
 			containers.Remove(elem)
 		} else {
 			containers.PushBack(x.Object)
-			// containers.PushFront(x.Object)
 		}
 
 		if x == hit {
@@ -100,7 +100,7 @@ func listEmpty(items *list.List) bool {
 
 func listFind(items *list.List, item interface{}) *list.Element {
 	for elem := items.Back(); elem != nil; elem = elem.Prev() {
-		if elem.Value == item {
+		if reflect.DeepEqual(elem.Value, item) {
 			return elem
 		}
 	}

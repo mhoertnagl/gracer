@@ -53,20 +53,20 @@ func main() {
 	// p3.Transform = alg.Scaling(0.1, 0.1, 0.1)
 
 	middle := render.NewSphere()
-	middle.Transform = alg.Translation(0, 3.8, 0)
+	middle.Transform = alg.Translation(0, 7, 0)
 	// middle.Material.Pattern = p3
-	middle.Material.Color = canvas.NewColor(0.1, 0.1, 0.1)
+	middle.Material.Color = canvas.NewColor(0.3, 0.3, 0.3)
 	middle.Material.Ambient = 0.1
 	middle.Material.Diffuse = 0.1
 	middle.Material.Specular = 1.0
 	middle.Material.Shininess = 300
-	middle.Material.Reflective = 0.9
+	middle.Material.Reflective = 0.0
 	middle.Material.Transparency = 0.9
-	middle.Material.RefractiveIndex = 1.5
+	middle.Material.RefractiveIndex = 1.52
 	// middle.Material.ReceiveShadow = false
 
 	bubble := render.NewSphere()
-	bubble.Transform = alg.Translation(0, 3.8, 0).MultMat(alg.Scaling(0.5, 0.5, 0.5))
+	bubble.Transform = alg.Translation(0, 7, 0).MultMat(alg.Scaling(0.5, 0.5, 0.5))
 	// middle.Material.Pattern = p3
 	bubble.Material.Color = canvas.NewColor(0.1, 0.1, 0.1)
 	bubble.Material.Ambient = 0.0
@@ -99,7 +99,7 @@ func main() {
 	left.Material.Diffuse = 0.7
 	left.Material.Specular = 0.3
 
-	light := render.NewPointLight(alg.NewPoint(-50, 100, 150), canvas.NewColor(0.7, 0.7, 0.7))
+	light := render.NewPointLight(alg.NewPoint(-50, 100, 150), canvas.NewColor(0.9, 0.9, 0.9))
 	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White)
 
 	world := render.NewWorld()
@@ -117,15 +117,15 @@ func main() {
 	// world.AddObject(left)
 
 	//camera := render.NewCamera(300, 150, math.Pi/3)
-	// camera := render.NewCamera(1200, 1200, math.Pi/3)
-	camera := render.NewCamera(600, 600, math.Pi/3)
+	camera := render.NewCamera(1200, 1200, math.Pi/3)
+	// camera := render.NewCamera(600, 600, math.Pi/3)
 	camera.Transform = render.ViewTransform(
-		alg.NewPoint(0, 6, -5),
-		alg.NewPoint(0, 0, 0),
-		alg.NewVector3(0, 1, 0),
-		// alg.NewPoint(0, 6, 0),
+		// alg.NewPoint(0, 6, -5),
 		// alg.NewPoint(0, 0, 0),
-		// alg.NewVector3(0, 0, 1),
+		// alg.NewVector3(0, 1, 0),
+		alg.NewPoint(0, 9.5, 0),
+		alg.NewPoint(0, 0, 0),
+		alg.NewVector3(0, 0, 1),
 	)
 
 	canvas := world.Render(camera)
