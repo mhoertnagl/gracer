@@ -2,6 +2,7 @@ package render
 
 import (
 	"container/list"
+	"math"
 	"reflect"
 
 	"github.com/mhoertnagl/gracer/alg"
@@ -105,4 +106,19 @@ func listFind(items *list.List, item interface{}) *list.Element {
 		}
 	}
 	return nil
+}
+
+func schlick(c *comps) float64 {
+	cos := c.Eye.Dot(c.Normal)
+	if c.N1 > c.N2 {
+		N := c.N1 / c.N2
+		sin2t := N * N * (1.0 - cos*cos)
+		if sin2t > 1.0 {
+			return 1.0
+		}
+		cos = math.Sqrt(1.0 - sin2t)
+	}
+	k0 := ((c.N1 - c.N2) / (c.N1 + c.N2))
+	r0 := k0 * k0
+	return r0 + (1.0-r0)*math.Pow((1.0-cos), 5)
 }

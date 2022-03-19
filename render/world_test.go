@@ -184,23 +184,46 @@ func TestRefractedColorWithARefractedRay(t *testing.T) {
 func TestShadeHitWithATransparentMaterial(t *testing.T) {
 	f := math.Sqrt2 / 2
 	w := newDefaultWorld()
+	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
 	floor := NewPlane()
 	floor.Transform = alg.Translation(0, -1, 0)
 	floor.Material.Transparency = 0.5
 	floor.Material.RefractiveIndex = 1.5
 	w.AddObject(floor)
 	ball := NewSphere()
-	ball.Transform = alg.Translation(0, -3.5, -0.5)
 	ball.Material.Color = canvas.NewColor(1, 0, 0)
 	ball.Material.Ambient = 0.5
+	ball.Transform = alg.Translation(0, -3.5, -0.5)
 	w.AddObject(ball)
-	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
 	xs := NewIntersections(
 		NewIntersection(math.Sqrt2, floor),
 	)
 	c := prepareComps(xs[0], r, xs)
 	color := w.shade(c, 5)
 	AssertColorEqual(t, color, canvas.NewColor(0.93642, 0.686425, 0.686425))
+}
+
+func TestShadeHitWithAReflectiveAndTransparentMaterial(t *testing.T) {
+	f := math.Sqrt2 / 2
+	w := newDefaultWorld()
+	r := NewRay(alg.NewPoint(0, 0, -3), alg.NewVector3(0, -f, f))
+	floor := NewPlane()
+	floor.Transform = alg.Translation(0, -1, 0)
+	floor.Material.Reflective = 0.5
+	floor.Material.Transparency = 0.5
+	floor.Material.RefractiveIndex = 1.5
+	w.AddObject(floor)
+	ball := NewSphere()
+	ball.Material.Color = canvas.NewColor(1, 0, 0)
+	ball.Material.Ambient = 0.5
+	ball.Transform = alg.Translation(0, -3.5, -0.5)
+	w.AddObject(ball)
+	xs := NewIntersections(
+		NewIntersection(math.Sqrt2, floor),
+	)
+	c := prepareComps(xs[0], r, xs)
+	color := w.shade(c, 5)
+	AssertColorEqual(t, color, canvas.NewColor(0.93391, 0.69643, 0.69243))
 }
 
 func newDefaultWorld() *World {

@@ -169,6 +169,11 @@ func (w *World) shade(c *comps, remaining int) canvas.Color {
 	}
 	reflected := w.reflectedColor(c, remaining)
 	refracted := w.refractedColor(c, remaining)
+	material := c.Object.GetMaterial()
+	if material.Reflective > 0 && material.Transparency > 0 {
+		reflectance := schlick(c)
+		return color.Add(reflected.Scale(reflectance)).Add(refracted.Scale(1.0 - reflectance))
+	}
 	return color.Add(reflected).Add(refracted)
 }
 

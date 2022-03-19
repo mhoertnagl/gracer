@@ -60,7 +60,7 @@ func main() {
 	middle.Material.Diffuse = 0.1
 	middle.Material.Specular = 1.0
 	middle.Material.Shininess = 300
-	middle.Material.Reflective = 0.0
+	middle.Material.Reflective = 0
 	middle.Material.Transparency = 0.9
 	middle.Material.RefractiveIndex = 1.52
 	// middle.Material.ReceiveShadow = false
@@ -73,7 +73,7 @@ func main() {
 	bubble.Material.Diffuse = 0.0
 	bubble.Material.Specular = 0.0 //1.0
 	// bubble.Material.Shininess = 300
-	bubble.Material.Reflective = 0.0
+	bubble.Material.Reflective = 1
 	bubble.Material.Transparency = 1
 	bubble.Material.RefractiveIndex = 1.00029
 	bubble.Material.ReceiveShadow = false

@@ -169,6 +169,39 @@ func TestTheUnderPointIsOffsetBelowTheSurface(t *testing.T) {
 	AssertTrue(t, c.Point[2] < c.UnderPoint[2])
 }
 
+func TestSchlickApproximationUnderTotalInternalReflection(t *testing.T) {
+	f := math.Sqrt2 / 2
+	s := newGlassSphere()
+	r := NewRay(alg.NewPoint(0, 0, f), alg.NewVector3(0, 1, 0))
+	xs := NewIntersections(
+		NewIntersection(-f, s),
+		NewIntersection(f, s),
+	)
+	c := prepareComps(xs[1], r, xs)
+	AssertFloatEqual(t, schlick(c), 1.0)
+}
+
+func TestSchlickApproximationWithAPerpendicularViewingAngle(t *testing.T) {
+	s := newGlassSphere()
+	r := NewRay(alg.NewPoint(0, 0, 0), alg.NewVector3(0, 1, 0))
+	xs := NewIntersections(
+		NewIntersection(-1, s),
+		NewIntersection(1, s),
+	)
+	c := prepareComps(xs[1], r, xs)
+	AssertFloatEqual(t, schlick(c), 0.04)
+}
+
+func TestSchlickApproximationWithASmallAngleAndN2GreaterN1(t *testing.T) {
+	s := newGlassSphere()
+	r := NewRay(alg.NewPoint(0, 0.99, -2), alg.NewVector3(0, 0, 1))
+	xs := NewIntersections(
+		NewIntersection(1.8589, s),
+	)
+	c := prepareComps(xs[0], r, xs)
+	AssertFloatEqual(t, schlick(c), 0.48873)
+}
+
 func newGlassSphere() *Sphere {
 	s := NewSphere()
 	s.Material.Transparency = 1
