@@ -21,11 +21,11 @@ func NewPlane() *Plane {
 func (p *Plane) Intersect(r *Ray) Intersections {
 	or := r.Transform(alg.Inverse(p.Transform))
 	if math.Abs(or.Direction[1]) < EPSILON {
-		return Intersections{}
+		return NewIntersections()
 	}
-	return Intersections{
+	return NewIntersections(
 		NewIntersection(-or.Origin[1]/or.Direction[1], p),
-	}
+	)
 }
 
 func (p *Plane) NormalAt(point alg.Vector) alg.Vector {

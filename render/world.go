@@ -32,39 +32,6 @@ func (w *World) AddObject(object Object) {
 	w.Objects = append(w.Objects, object)
 }
 
-// func (world *World) Render(camera *Camera) *canvas.Canvas {
-// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
-// 	for y := 0; y < camera.vsize; y++ {
-// 		for x := 0; x < camera.hsize; x++ {
-// 			ray := camera.RayForPixel(x, y)
-// 			color := world.colorAt(ray, world.MaxBounces)
-// 			canvas.Set(x, y, color)
-// 		}
-// 	}
-// 	return canvas
-// }
-
-// func (world *World) Render(camera *Camera) *canvas.Canvas {
-// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
-// 	ch := make(chan struct{}, camera.vsize)
-// 	wg := sync.WaitGroup{}
-// 	for y := 0; y < camera.vsize; y++ {
-// 		wg.Add(1)
-// 		go func(y int, ch chan struct{}, wg *sync.WaitGroup) {
-// 			for x := 0; x < camera.hsize; x++ {
-// 				ray := camera.RayForPixel(x, y)
-// 				color := world.colorAt(ray, world.MaxBounces)
-// 				canvas.Set(x, y, color)
-// 			}
-// 			ch <- struct{}{}
-// 			wg.Done()
-// 		}(y, ch, &wg)
-// 	}
-// 	wg.Wait()
-// 	close(ch)
-// 	return canvas
-// }
-
 type line struct {
 	y  int
 	xs []canvas.Color
@@ -105,36 +72,6 @@ func renderLine(world *World, camera *Camera, y int, ch chan *line, wg *sync.Wai
 	ch <- line
 	wg.Done()
 }
-
-// type pixel struct {
-// 	x     int
-// 	y     int
-// 	color canvas.Color
-// }
-
-// func (world *World) Render(camera *Camera) *canvas.Canvas {
-// 	canvas := canvas.NewCanvas(camera.hsize, camera.vsize)
-// 	ch := make(chan *pixel, camera.vsize)
-// 	wg := sync.WaitGroup{}
-// 	for y := 0; y < camera.vsize; y++ {
-// 		for x := 0; x < camera.hsize; x++ {
-// 			wg.Add(1)
-// 			go func(y int, x int, ch chan *pixel, wg *sync.WaitGroup) {
-// 				ray := camera.RayForPixel(x, y)
-// 				color := world.colorAt(ray, world.MaxBounces)
-// 				// canvas.Set(x, y, color)
-// 				ch <- &pixel{y: y, x: x, color: color}
-// 				wg.Done()
-// 			}(y, x, ch, &wg)
-// 		}
-// 	}
-// 	wg.Wait()
-// 	close(ch)
-// 	for pixel := range ch {
-// 		canvas.Set(pixel.x, pixel.y, pixel.color)
-// 	}
-// 	return canvas
-// }
 
 func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	xs := w.intersect(r)
