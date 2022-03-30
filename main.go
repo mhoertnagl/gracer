@@ -107,6 +107,15 @@ func main() {
 	left.Material.Specular = 0.3
 	left.Material.Reflective = 0.1
 
+	cyl := render.NewCylinder()
+	cyl.Transform = alg.
+		Translation(1.5, 0, -1).
+		MultMat(alg.Scaling(0.33, 2, 0.33))
+	cyl.Material.Color = canvas.NewColor(1, 0, 0)
+	cyl.Material.Diffuse = 0.7
+	cyl.Material.Specular = 0.3
+	cyl.Material.Reflective = 0.1
+
 	light := render.NewPointLight(alg.NewPoint(-50, 150, 150), canvas.White)
 	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White)
 
@@ -121,10 +130,11 @@ func main() {
 	world.AddObject(bubble)
 	world.AddObject(right)
 	world.AddObject(left)
+	world.AddObject(cyl)
 
 	// camera := render.NewCamera(300, 300, math.Pi/3)
-	camera := render.NewCamera(1200, 1200, math.Pi/3)
-	// camera := render.NewCamera(600, 600, math.Pi/3)
+	// camera := render.NewCamera(1200, 1200, math.Pi/3)
+	camera := render.NewCamera(600, 600, math.Pi/3)
 	camera.Transform = render.ViewTransform(
 		alg.NewPoint(2.5, 2.5, 3),
 		alg.NewPoint(0, 0, 0),
