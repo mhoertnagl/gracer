@@ -9,12 +9,14 @@ import (
 type Plane struct {
 	Transform alg.Matrix
 	Material  *Material
+	Parent    Object
 }
 
 func NewPlane() *Plane {
 	return &Plane{
 		Transform: alg.Id4,
 		Material:  NewMaterial(),
+		Parent:    nil,
 	}
 }
 
@@ -29,12 +31,19 @@ func (p *Plane) Intersect(r *Ray) Intersections {
 }
 
 func (p *Plane) NormalAt(point alg.Vector) alg.Vector {
-	inv := alg.Inverse(p.Transform)
-	on := alg.NewVector3(0, 1, 0)
-	wn := inv.Transpose().MultVec(on)
-	// Reset w coordinate to 0.
-	wn[3] = 0
-	return wn.Norm()
+	op := worldToObject(p, point)
+	on := p.localNormalAt(op)
+	return normalToWorld(p, on)
+	// inv := alg.Inverse(p.Transform)
+	// on := alg.NewVector3(0, 1, 0)
+	// wn := inv.Transpose().MultVec(on)
+	// // Reset w coordinate to 0.
+	// wn[3] = 0
+	// return wn.Norm()
+}
+
+func (p *Plane) localNormalAt(point alg.Vector) alg.Vector {
+	return alg.NewVector3(0, 1, 0)
 }
 
 func (p *Plane) GetMaterial() *Material {
@@ -43,4 +52,12 @@ func (p *Plane) GetMaterial() *Material {
 
 func (p *Plane) GetTransform() alg.Matrix {
 	return p.Transform
+}
+
+func (p *Plane) SetParent(obj Object) {
+	p.Parent = obj
+}
+
+func (p *Plane) GetParent() Object {
+	return p.Parent
 }

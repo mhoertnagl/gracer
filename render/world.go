@@ -2,7 +2,6 @@ package render
 
 import (
 	"math"
-	"sort"
 	"sync"
 
 	"github.com/mhoertnagl/gracer/canvas"
@@ -10,6 +9,7 @@ import (
 
 const EPSILON = 2.220446049250313e-6
 
+// TODO: Use a Group as Objects root.
 type World struct {
 	Lights     []Light
 	Objects    []Object
@@ -82,16 +82,9 @@ func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	return canvas.Black
 }
 
+// TODO: Same as group.intersect
 func (w *World) intersect(r *Ray) Intersections {
-	xxs := Intersections{}
-	for _, object := range w.Objects {
-		xs := object.Intersect(r)
-		xxs = append(xxs, xs...)
-	}
-	sort.Slice(xxs, func(i, j int) bool {
-		return xxs[i].Distance < xxs[j].Distance
-	})
-	return xxs
+	return IntersectCollection(w.Objects, r)
 }
 
 func (w *World) shade(c *comps, remaining int) canvas.Color {

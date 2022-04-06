@@ -116,6 +116,14 @@ func main() {
 	cyl.Material.Specular = 0.3
 	cyl.Material.Reflective = 0.1
 
+	group := render.NewGroup()
+	group.AddKid(middle)
+	group.AddKid(bubble)
+	group.AddKid(right)
+	group.AddKid(left)
+	group.AddKid(cyl)
+	group.Transform = alg.Id4.RotateY(math.Pi/4).Translate(0.3, 0, 1.5)
+
 	light := render.NewPointLight(alg.NewPoint(-50, 150, 150), canvas.White)
 	// light2 := render.NewPointLight(alg.NewPoint(10, 10, 10), canvas.White)
 
@@ -126,11 +134,12 @@ func main() {
 	world.AddObject(floor)
 	world.AddObject(leftWall)
 	world.AddObject(rightWall)
-	world.AddObject(middle)
-	world.AddObject(bubble)
-	world.AddObject(right)
-	world.AddObject(left)
-	world.AddObject(cyl)
+	world.AddObject(group)
+	// world.AddObject(middle)
+	// world.AddObject(bubble)
+	// world.AddObject(right)
+	// world.AddObject(left)
+	// world.AddObject(cyl)
 
 	// camera := render.NewCamera(300, 300, math.Pi/3)
 	// camera := render.NewCamera(1200, 1200, math.Pi/3)

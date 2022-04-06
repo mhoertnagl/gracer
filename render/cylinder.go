@@ -9,12 +9,14 @@ import (
 type Cylinder struct {
 	Transform alg.Matrix
 	Material  *Material
+	Parent    Object
 }
 
 func NewCylinder() *Cylinder {
 	return &Cylinder{
 		Transform: alg.Id4,
 		Material:  NewMaterial(),
+		Parent:    nil,
 	}
 }
 
@@ -74,13 +76,15 @@ func checkCaps(r *Ray, t float64) bool {
 }
 
 func (c *Cylinder) NormalAt(p alg.Vector) alg.Vector {
-	inv := alg.Inverse(c.Transform)
-	op := inv.MultVec(p)
+	// inv := alg.Inverse(c.Transform)
+	// op := inv.MultVec(p)
+	op := worldToObject(c, p)
 	on := c.localNormalAt(op)
-	wn := inv.Transpose().MultVec(on)
-	// Reset w coordinate to 0.
-	wn[3] = 0
-	return wn.Norm()
+	return normalToWorld(c, on)
+	// wn := inv.Transpose().MultVec(on)
+	// // Reset w coordinate to 0.
+	// wn[3] = 0
+	// return wn.Norm()
 }
 
 func (c *Cylinder) localNormalAt(p alg.Vector) alg.Vector {
@@ -100,4 +104,12 @@ func (c *Cylinder) GetMaterial() *Material {
 
 func (c *Cylinder) GetTransform() alg.Matrix {
 	return c.Transform
+}
+
+func (c *Cylinder) SetParent(obj Object) {
+	c.Parent = obj
+}
+
+func (c *Cylinder) GetParent() Object {
+	return c.Parent
 }

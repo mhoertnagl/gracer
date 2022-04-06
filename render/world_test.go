@@ -178,7 +178,7 @@ func TestRefractedColorWithARefractedRay(t *testing.T) {
 	// to look at the second intersection xs[1].
 	c := prepareComps(xs[2], r, xs)
 	color := w.refractedColor(c, 5)
-	AssertColorEqual(t, color, canvas.NewColor(0, 0.998885, 0.04725))
+	AssertColorEqual(t, color, canvas.NewColor(0, 0.998882, 0.047217))
 }
 
 func TestShadeHitWithATransparentMaterial(t *testing.T) {

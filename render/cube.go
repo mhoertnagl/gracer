@@ -9,15 +9,18 @@ import (
 type Cube struct {
 	Transform alg.Matrix
 	Material  *Material
+	Parent    Object
 }
 
 func NewCube() *Cube {
 	return &Cube{
 		Transform: alg.Id4,
 		Material:  NewMaterial(),
+		Parent:    nil,
 	}
 }
 
+// TODO: Improve performance.
 func (c *Cube) Intersect(r *Ray) Intersections {
 	or := r.Transform(alg.Inverse(c.Transform))
 	xtmin, xtmax := checkAxis(or.Origin[0], or.Direction[0])
@@ -63,13 +66,15 @@ func inft(num float64) float64 {
 }
 
 func (c *Cube) NormalAt(p alg.Vector) alg.Vector {
-	inv := alg.Inverse(c.Transform)
-	op := inv.MultVec(p)
+	// inv := alg.Inverse(c.Transform)
+	// op := inv.MultVec(p)
+	op := worldToObject(c, p)
 	on := c.localNormalAt(op)
-	wn := inv.Transpose().MultVec(on)
-	// Reset w coordinate to 0.
-	wn[3] = 0
-	return wn.Norm()
+	return normalToWorld(c, on)
+	// wn := inv.Transpose().MultVec(on)
+	// // Reset w coordinate to 0.
+	// wn[3] = 0
+	// return wn.Norm()
 }
 
 func (c *Cube) localNormalAt(p alg.Vector) alg.Vector {
@@ -92,4 +97,12 @@ func (c *Cube) GetMaterial() *Material {
 
 func (c *Cube) GetTransform() alg.Matrix {
 	return c.Transform
+}
+
+func (c *Cube) SetParent(obj Object) {
+	c.Parent = obj
+}
+
+func (c *Cube) GetParent() Object {
+	return c.Parent
 }
