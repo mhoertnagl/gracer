@@ -7,21 +7,23 @@ import (
 )
 
 type Sphere struct {
-	Transform alg.Matrix
-	Material  *Material
-	Parent    Object
+	Transform    alg.Matrix
+	Material     *Material
+	Parent       Object
+	invTransform alg.Matrix
 }
 
 func NewSphere() *Sphere {
 	return &Sphere{
-		Transform: alg.Id4,
-		Material:  NewMaterial(),
-		Parent:    nil,
+		Transform:    alg.Id4,
+		Material:     NewMaterial(),
+		Parent:       nil,
+		invTransform: nil,
 	}
 }
 
 func (s *Sphere) Intersect(r *Ray) Intersections {
-	or := r.Transform(alg.Inverse(s.Transform))
+	or := r.Transform(s.GetInverseTransform())
 	str := or.Origin.Sub(alg.Origin)
 	a := or.Direction.Dot(or.Direction)
 	b := 2 * or.Direction.Dot(str)
@@ -62,6 +64,13 @@ func (s *Sphere) SetParent(obj Object) {
 
 func (s *Sphere) GetParent() Object {
 	return s.Parent
+}
+
+func (s *Sphere) GetInverseTransform() alg.Matrix {
+	if s.invTransform == nil {
+		s.invTransform = alg.Inverse(s.Transform)
+	}
+	return s.invTransform
 }
 
 func (s *Sphere) Bounds() *Bounds {

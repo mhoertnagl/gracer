@@ -7,22 +7,24 @@ import (
 )
 
 type Cube struct {
-	Transform alg.Matrix
-	Material  *Material
-	Parent    Object
+	Transform    alg.Matrix
+	Material     *Material
+	Parent       Object
+	invTransform alg.Matrix
 }
 
 func NewCube() *Cube {
 	return &Cube{
-		Transform: alg.Id4,
-		Material:  NewMaterial(),
-		Parent:    nil,
+		Transform:    alg.Id4,
+		Material:     NewMaterial(),
+		Parent:       nil,
+		invTransform: nil,
 	}
 }
 
 // TODO: Improve performance.
 func (c *Cube) Intersect(r *Ray) Intersections {
-	or := r.Transform(alg.Inverse(c.Transform))
+	or := r.Transform(c.GetInverseTransform())
 	xtmin, xtmax := checkAxis(or.Origin[0], or.Direction[0])
 	ytmin, ytmax := checkAxis(or.Origin[1], or.Direction[1])
 	ztmin, ztmax := checkAxis(or.Origin[2], or.Direction[2])
@@ -99,4 +101,11 @@ func (c *Cube) SetParent(obj Object) {
 
 func (c *Cube) GetParent() Object {
 	return c.Parent
+}
+
+func (c *Cube) GetInverseTransform() alg.Matrix {
+	if c.invTransform == nil {
+		c.invTransform = alg.Inverse(c.Transform)
+	}
+	return c.invTransform
 }

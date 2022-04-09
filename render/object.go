@@ -11,6 +11,7 @@ type Object interface {
 	NormalAt(p alg.Vector) alg.Vector
 	GetMaterial() *Material
 	GetTransform() alg.Matrix
+	GetInverseTransform() alg.Matrix
 	SetParent(obj Object)
 	GetParent() Object
 }
@@ -33,11 +34,11 @@ func worldToObject(obj Object, point alg.Vector) alg.Vector {
 	if parent := obj.GetParent(); parent != nil {
 		point = worldToObject(parent, point)
 	}
-	return alg.Inverse(obj.GetTransform()).MultVec(point)
+	return obj.GetInverseTransform().MultVec(point)
 }
 
 func normalToWorld(obj Object, normal alg.Vector) alg.Vector {
-	normal = alg.Inverse(obj.GetTransform()).Transpose().MultVec(normal)
+	normal = obj.GetInverseTransform().Transpose().MultVec(normal)
 	// Reset w coordinate to 0.
 	normal[3] = 0
 	normal = normal.Norm()

@@ -7,21 +7,23 @@ import (
 )
 
 type Plane struct {
-	Transform alg.Matrix
-	Material  *Material
-	Parent    Object
+	Transform    alg.Matrix
+	Material     *Material
+	Parent       Object
+	invTransform alg.Matrix
 }
 
 func NewPlane() *Plane {
 	return &Plane{
-		Transform: alg.Id4,
-		Material:  NewMaterial(),
-		Parent:    nil,
+		Transform:    alg.Id4,
+		Material:     NewMaterial(),
+		Parent:       nil,
+		invTransform: nil,
 	}
 }
 
 func (p *Plane) Intersect(r *Ray) Intersections {
-	or := r.Transform(alg.Inverse(p.Transform))
+	or := r.Transform(p.GetInverseTransform())
 	if math.Abs(or.Direction[1]) < EPSILON {
 		return NewIntersections()
 	}
@@ -54,4 +56,11 @@ func (p *Plane) SetParent(obj Object) {
 
 func (p *Plane) GetParent() Object {
 	return p.Parent
+}
+
+func (p *Plane) GetInverseTransform() alg.Matrix {
+	if p.invTransform == nil {
+		p.invTransform = alg.Inverse(p.Transform)
+	}
+	return p.invTransform
 }

@@ -7,21 +7,23 @@ import (
 )
 
 type Cylinder struct {
-	Transform alg.Matrix
-	Material  *Material
-	Parent    Object
+	Transform    alg.Matrix
+	Material     *Material
+	Parent       Object
+	invTransform alg.Matrix
 }
 
 func NewCylinder() *Cylinder {
 	return &Cylinder{
-		Transform: alg.Id4,
-		Material:  NewMaterial(),
-		Parent:    nil,
+		Transform:    alg.Id4,
+		Material:     NewMaterial(),
+		Parent:       nil,
+		invTransform: nil,
 	}
 }
 
 func (s *Cylinder) Intersect(r *Ray) Intersections {
-	r2 := r.Transform(alg.Inverse(s.Transform))
+	r2 := r.Transform(s.GetInverseTransform())
 	xd := r2.Direction[0]
 	zd := r2.Direction[2]
 	a := xd*xd + zd*zd
@@ -106,4 +108,11 @@ func (c *Cylinder) SetParent(obj Object) {
 
 func (c *Cylinder) GetParent() Object {
 	return c.Parent
+}
+
+func (c *Cylinder) GetInverseTransform() alg.Matrix {
+	if c.invTransform == nil {
+		c.invTransform = alg.Inverse(c.Transform)
+	}
+	return c.invTransform
 }

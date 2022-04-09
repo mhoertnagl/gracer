@@ -5,21 +5,23 @@ import (
 )
 
 type Group struct {
-	Transform alg.Matrix
-	Parent    Object
-	Kids      []Object
+	Transform    alg.Matrix
+	Parent       Object
+	Kids         []Object
+	invTransform alg.Matrix
 }
 
 func NewGroup() *Group {
 	return &Group{
-		Transform: alg.Id4,
-		Parent:    nil,
-		Kids:      make([]Object, 0),
+		Transform:    alg.Id4,
+		Parent:       nil,
+		Kids:         make([]Object, 0),
+		invTransform: nil,
 	}
 }
 
 func (g *Group) Intersect(r *Ray) Intersections {
-	r2 := r.Transform(alg.Inverse(g.Transform))
+	r2 := r.Transform(g.GetInverseTransform())
 	return IntersectCollection(g.Kids, r2)
 }
 
@@ -46,4 +48,11 @@ func (g *Group) GetParent() Object {
 func (g *Group) AddKid(kid Object) {
 	kid.SetParent(g)
 	g.Kids = append(g.Kids, kid)
+}
+
+func (g *Group) GetInverseTransform() alg.Matrix {
+	if g.invTransform == nil {
+		g.invTransform = alg.Inverse(g.Transform)
+	}
+	return g.invTransform
 }
