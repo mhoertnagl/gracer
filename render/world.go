@@ -82,7 +82,6 @@ func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
 	return canvas.Black
 }
 
-// TODO: Same as group.intersect
 func (w *World) intersect(r *Ray) Intersections {
 	return IntersectCollection(w.Objects, r)
 }

@@ -21,34 +21,27 @@ func NewSphere() *Sphere {
 }
 
 func (s *Sphere) Intersect(r *Ray) Intersections {
-	r2 := r.Transform(alg.Inverse(s.Transform))
-	str := r2.Origin.Sub(alg.Origin)
-	a := r2.Direction.Dot(r2.Direction)
-	b := 2 * r2.Direction.Dot(str)
+	or := r.Transform(alg.Inverse(s.Transform))
+	str := or.Origin.Sub(alg.Origin)
+	a := or.Direction.Dot(or.Direction)
+	b := 2 * or.Direction.Dot(str)
 	c := str.Dot(str) - 1
 	d := b*b - 4*a*c
 	if d < 0 {
-		return Intersections{}
+		return NewIntersections()
 	}
 	ds := math.Sqrt(d)
 	a2 := 2 * a
-	return Intersections{
+	return NewIntersections(
 		NewIntersection((-b-ds)/a2, s),
 		NewIntersection((-b+ds)/a2, s),
-	}
+	)
 }
 
 func (s *Sphere) NormalAt(point alg.Vector) alg.Vector {
 	op := worldToObject(s, point)
 	on := s.localNormalAt(op)
 	return normalToWorld(s, on)
-	// inv := alg.Inverse(s.Transform)
-	// op := inv.MultVec(p)
-	// on := op.Sub(alg.Origin)
-	// wn := inv.Transpose().MultVec(on)
-	// // Reset w coordinate to 0.
-	// wn[3] = 0
-	// return wn.Norm()
 }
 
 func (s *Sphere) localNormalAt(point alg.Vector) alg.Vector {
@@ -69,4 +62,8 @@ func (s *Sphere) SetParent(obj Object) {
 
 func (s *Sphere) GetParent() Object {
 	return s.Parent
+}
+
+func (s *Sphere) Bounds() *Bounds {
+	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }

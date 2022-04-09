@@ -18,7 +18,6 @@ func NewGroup() *Group {
 	}
 }
 
-// TODO: Same as world.intersect
 func (g *Group) Intersect(r *Ray) Intersections {
 	r2 := r.Transform(alg.Inverse(g.Transform))
 	return IntersectCollection(g.Kids, r2)

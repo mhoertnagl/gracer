@@ -66,15 +66,9 @@ func inft(num float64) float64 {
 }
 
 func (c *Cube) NormalAt(p alg.Vector) alg.Vector {
-	// inv := alg.Inverse(c.Transform)
-	// op := inv.MultVec(p)
 	op := worldToObject(c, p)
 	on := c.localNormalAt(op)
 	return normalToWorld(c, on)
-	// wn := inv.Transpose().MultVec(on)
-	// // Reset w coordinate to 0.
-	// wn[3] = 0
-	// return wn.Norm()
 }
 
 func (c *Cube) localNormalAt(p alg.Vector) alg.Vector {

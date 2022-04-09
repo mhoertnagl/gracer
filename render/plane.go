@@ -34,12 +34,6 @@ func (p *Plane) NormalAt(point alg.Vector) alg.Vector {
 	op := worldToObject(p, point)
 	on := p.localNormalAt(op)
 	return normalToWorld(p, on)
-	// inv := alg.Inverse(p.Transform)
-	// on := alg.NewVector3(0, 1, 0)
-	// wn := inv.Transpose().MultVec(on)
-	// // Reset w coordinate to 0.
-	// wn[3] = 0
-	// return wn.Norm()
 }
 
 func (p *Plane) localNormalAt(point alg.Vector) alg.Vector {
