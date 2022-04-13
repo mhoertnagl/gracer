@@ -36,6 +36,7 @@ func checkBoundsAxis(min, max, origin, direction float64) (float64, float64) {
 		tmin = tmin_numerator / direction
 		tmax = tmax_numerator / direction
 	} else {
+		// TODO: inft cube.go -> utils/math.go
 		tmin = inft(tmin_numerator)
 		tmax = inft(tmax_numerator)
 	}
@@ -43,4 +44,23 @@ func checkBoundsAxis(min, max, origin, direction float64) (float64, float64) {
 		return tmax, tmin
 	}
 	return tmin, tmax
+}
+
+func (b *Bounds) Edges() []alg.Vector {
+	return []alg.Vector{
+		alg.NewPoint(b.Min[0], b.Min[1], b.Min[2]),
+		alg.NewPoint(b.Min[0], b.Min[1], b.Max[2]),
+		alg.NewPoint(b.Min[0], b.Max[1], b.Min[2]),
+		alg.NewPoint(b.Min[0], b.Max[1], b.Max[2]),
+		alg.NewPoint(b.Max[0], b.Min[1], b.Min[2]),
+		alg.NewPoint(b.Max[0], b.Min[1], b.Max[2]),
+		alg.NewPoint(b.Max[0], b.Max[1], b.Min[2]),
+		alg.NewPoint(b.Max[0], b.Max[1], b.Max[2]),
+	}
+}
+
+func NewBoundsFrom(vs ...alg.Vector) *Bounds {
+	min := alg.MinN(vs...)
+	max := alg.MaxN(vs...)
+	return NewBounds(min, max)
 }

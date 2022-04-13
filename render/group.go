@@ -65,3 +65,8 @@ func (g *Group) GetBounds() *Bounds {
 	}
 	return g.bounds
 }
+
+// For each kid in g.Kids
+//   Get all 8 points of kid.Bounds()
+//   Transform them
+// Create a new AABB from all of these points.
