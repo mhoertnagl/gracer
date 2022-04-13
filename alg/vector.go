@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math"
 	"strings"
+
+	"github.com/mhoertnagl/gracer/utils"
 )
 
 type Vector []float64
@@ -116,4 +118,40 @@ func (a Vector) Norm() Vector {
 
 func (a Vector) Reflect(n Vector) Vector {
 	return a.Sub(n.Mult(2 * a.Dot(n)))
+}
+
+// Max returns the component wise maximum vector of vectors a and b.
+func Max(a, b Vector) Vector {
+	max := NewZeroVector(len(a))
+	for i := 0; i < len(a); i++ {
+		max[i] = math.Max(a[i], b[i])
+	}
+	return max
+}
+
+// Min returns the component wise minimum vector of vectors a and b.
+func Min(a, b Vector) Vector {
+	min := NewZeroVector(len(a))
+	for i := 0; i < len(a); i++ {
+		min[i] = math.Min(a[i], b[i])
+	}
+	return min
+}
+
+// Max3 returns the component wise maximum vector of vectors a, b and c.
+func Max3(a, b, c Vector) Vector {
+	max := NewZeroVector(len(a))
+	for i := 0; i < len(a); i++ {
+		max[i] = utils.Max3(a[i], b[i], c[i])
+	}
+	return max
+}
+
+// Min3 returns the component wise minimum vector of vectors a, b and c.
+func Min3(a, b, c Vector) Vector {
+	min := NewZeroVector(len(a))
+	for i := 0; i < len(a); i++ {
+		min[i] = utils.Min3(a[i], b[i], c[i])
+	}
+	return min
 }

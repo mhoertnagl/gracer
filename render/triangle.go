@@ -72,5 +72,7 @@ func (t *Triangle) GetInverseTransform() alg.Matrix {
 }
 
 func (t *Triangle) GetBounds() *Bounds {
-	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
+	min := alg.Min3(t.P1, t.P2, t.P3)
+	max := alg.Max3(t.P1, t.P2, t.P3)
+	return NewBounds(min, max)
 }
