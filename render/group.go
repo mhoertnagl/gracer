@@ -9,6 +9,7 @@ type Group struct {
 	Parent       Object
 	Kids         []Object
 	invTransform alg.Matrix
+	bounds       *Bounds
 }
 
 func NewGroup() *Group {
@@ -17,6 +18,7 @@ func NewGroup() *Group {
 		Parent:       nil,
 		Kids:         make([]Object, 0),
 		invTransform: nil,
+		bounds:       nil,
 	}
 }
 
@@ -55,4 +57,11 @@ func (g *Group) GetInverseTransform() alg.Matrix {
 		g.invTransform = alg.Inverse(g.Transform)
 	}
 	return g.invTransform
+}
+
+func (g *Group) GetBounds() *Bounds {
+	if g.bounds == nil {
+		g.bounds = NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
+	}
+	return g.bounds
 }

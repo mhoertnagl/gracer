@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/mhoertnagl/gracer/alg"
+	"github.com/mhoertnagl/gracer/utils"
 )
 
 type Bounds struct {
@@ -20,11 +21,12 @@ func (b *Bounds) IntersectLocal(r *Ray) bool {
 	xtmin, xtmax := checkBoundsAxis(b.Min[0], b.Max[0], r.Origin[0], r.Direction[0])
 	ytmin, ytmax := checkBoundsAxis(b.Min[1], b.Max[1], r.Origin[1], r.Direction[1])
 	ztmin, ztmax := checkBoundsAxis(b.Min[2], b.Max[2], r.Origin[2], r.Direction[2])
-	tmin := math.Max(xtmin, math.Max(ytmin, ztmin))
-	tmax := math.Min(xtmax, math.Min(ytmax, ztmax))
+	tmin := utils.Max3(xtmin, ytmin, ztmin)
+	tmax := utils.Min3(xtmax, ytmax, ztmax)
 	return tmax >= tmin
 }
 
+// TODO: More general than checkBounds. Use this in the cube case.
 func checkBoundsAxis(min, max, origin, direction float64) (float64, float64) {
 	tmin_numerator := min - origin
 	tmax_numerator := max - origin

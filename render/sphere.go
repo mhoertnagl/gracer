@@ -73,6 +73,6 @@ func (s *Sphere) GetInverseTransform() alg.Matrix {
 	return s.invTransform
 }
 
-func (s *Sphere) Bounds() *Bounds {
+func (s *Sphere) GetBounds() *Bounds {
 	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }

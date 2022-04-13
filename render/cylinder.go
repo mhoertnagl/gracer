@@ -116,3 +116,7 @@ func (c *Cylinder) GetInverseTransform() alg.Matrix {
 	}
 	return c.invTransform
 }
+
+func (c *Cylinder) GetBounds() *Bounds {
+	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
+}

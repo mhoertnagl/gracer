@@ -14,6 +14,7 @@ type Object interface {
 	GetInverseTransform() alg.Matrix
 	SetParent(obj Object)
 	GetParent() Object
+	GetBounds() *Bounds
 }
 
 // TODO: Add another interface Shape that inherits from Object with GetMaterial().

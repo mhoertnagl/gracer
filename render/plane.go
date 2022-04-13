@@ -64,3 +64,9 @@ func (p *Plane) GetInverseTransform() alg.Matrix {
 	}
 	return p.invTransform
 }
+
+func (p *Plane) GetBounds() *Bounds {
+	min := alg.NewPoint(-math.MaxFloat64, 0, -math.MaxFloat64)
+	max := alg.NewPoint(math.MaxFloat64, 0, math.MaxFloat64)
+	return NewBounds(min, max)
+}

@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/mhoertnagl/gracer/alg"
+	"github.com/mhoertnagl/gracer/utils"
 )
 
 type Cube struct {
@@ -28,8 +29,8 @@ func (c *Cube) Intersect(r *Ray) Intersections {
 	xtmin, xtmax := checkAxis(or.Origin[0], or.Direction[0])
 	ytmin, ytmax := checkAxis(or.Origin[1], or.Direction[1])
 	ztmin, ztmax := checkAxis(or.Origin[2], or.Direction[2])
-	tmin := math.Max(xtmin, math.Max(ytmin, ztmin))
-	tmax := math.Min(xtmax, math.Min(ytmax, ztmax))
+	tmin := utils.Max3(xtmin, ytmin, ztmin)
+	tmax := utils.Min3(xtmax, ytmax, ztmax)
 	if tmin > tmax {
 		return NewIntersections()
 	}
@@ -77,7 +78,7 @@ func (c *Cube) localNormalAt(p alg.Vector) alg.Vector {
 	xabs := math.Abs(p[0])
 	yabs := math.Abs(p[1])
 	zabs := math.Abs(p[2])
-	maxc := math.Max(xabs, math.Max(yabs, zabs))
+	maxc := utils.Max3(xabs, yabs, zabs)
 	if maxc == xabs {
 		return alg.NewVector3(p[0], 0, 0)
 	}
@@ -108,4 +109,8 @@ func (c *Cube) GetInverseTransform() alg.Matrix {
 		c.invTransform = alg.Inverse(c.Transform)
 	}
 	return c.invTransform
+}
+
+func (c *Cube) GetBounds() *Bounds {
+	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }

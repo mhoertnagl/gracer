@@ -70,3 +70,7 @@ func (t *Triangle) GetInverseTransform() alg.Matrix {
 	}
 	return t.invTransform
 }
+
+func (t *Triangle) GetBounds() *Bounds {
+	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
+}
