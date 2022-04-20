@@ -23,12 +23,16 @@ func NewGroup() *Group {
 }
 
 func (g *Group) Intersect(r *Ray) Intersections {
-	r2 := r.Transform(g.GetInverseTransform())
-	return IntersectCollection(g.Kids, r2)
+	rg := r.Transform(g.GetTransform())
+	if g.GetBounds().Intersect(rg) {
+		r2 := r.Transform(g.GetInverseTransform())
+		return IntersectCollection(g.Kids, r2)
+	}
+	return NewIntersections()
 }
 
 func (g *Group) NormalAt(p alg.Vector) alg.Vector {
-	return alg.NewZeroVector(4)
+	panic("Groups don't have normal vectors")
 }
 
 func (g *Group) GetMaterial() *Material {
@@ -61,12 +65,16 @@ func (g *Group) GetInverseTransform() alg.Matrix {
 
 func (g *Group) GetBounds() *Bounds {
 	if g.bounds == nil {
-		g.bounds = NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
+		g.bounds = computeBounds(g)
 	}
 	return g.bounds
 }
 
-// For each kid in g.Kids
-//   Get all 8 points of kid.Bounds()
-//   Transform them
-// Create a new AABB from all of these points.
+func computeBounds(g *Group) *Bounds {
+	edges := []alg.Vector{}
+	for _, kid := range g.Kids {
+		bounds := kid.GetBounds()
+		edges = append(edges, bounds.Edges()...)
+	}
+	return NewBoundsFrom(edges...)
+}

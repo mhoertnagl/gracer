@@ -16,8 +16,13 @@ func NewBounds(min alg.Vector, max alg.Vector) *Bounds {
 	return &Bounds{Min: min, Max: max}
 }
 
-// Tests intersection in local coordinates only!
-func (b *Bounds) IntersectLocal(r *Ray) bool {
+func NewBoundsFrom(vs ...alg.Vector) *Bounds {
+	min := alg.MinN(vs...)
+	max := alg.MaxN(vs...)
+	return NewBounds(min, max)
+}
+
+func (b *Bounds) Intersect(r *Ray) bool {
 	xtmin, xtmax := checkBoundsAxis(b.Min[0], b.Max[0], r.Origin[0], r.Direction[0])
 	ytmin, ytmax := checkBoundsAxis(b.Min[1], b.Max[1], r.Origin[1], r.Direction[1])
 	ztmin, ztmax := checkBoundsAxis(b.Min[2], b.Max[2], r.Origin[2], r.Direction[2])
@@ -57,10 +62,4 @@ func (b *Bounds) Edges() []alg.Vector {
 		alg.NewPoint(b.Max[0], b.Max[1], b.Min[2]),
 		alg.NewPoint(b.Max[0], b.Max[1], b.Max[2]),
 	}
-}
-
-func NewBoundsFrom(vs ...alg.Vector) *Bounds {
-	min := alg.MinN(vs...)
-	max := alg.MaxN(vs...)
-	return NewBounds(min, max)
 }

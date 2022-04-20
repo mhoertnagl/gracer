@@ -157,6 +157,8 @@ func main() {
 	)
 
 	canvas := world.Render(camera)
+	log.Printf("Number of Rays: %d", int(world.NumRays))
+	log.Printf("Hit Rate: %f", world.NumHits/world.NumRays)
 	canvas.WriteToFile("out.jpg")
 }
 

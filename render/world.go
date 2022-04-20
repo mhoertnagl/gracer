@@ -14,6 +14,8 @@ type World struct {
 	Lights     []Light
 	Objects    []Object
 	MaxBounces int
+	NumHits    float64
+	NumRays    float64
 }
 
 func NewWorld() *World {
@@ -21,6 +23,8 @@ func NewWorld() *World {
 		Lights:     make([]Light, 0),
 		Objects:    make([]Object, 0),
 		MaxBounces: 5,
+		NumHits:    0,
+		NumRays:    0,
 	}
 }
 
@@ -74,8 +78,10 @@ func renderLine(world *World, camera *Camera, y int, ch chan *line, wg *sync.Wai
 }
 
 func (w *World) colorAt(r *Ray, remaining int) canvas.Color {
+	w.NumRays++
 	xs := w.intersect(r)
 	if hit := xs.Hit(); hit != nil {
+		w.NumHits++
 		c := prepareComps(hit, r, xs)
 		return w.shade(c, remaining)
 	}
