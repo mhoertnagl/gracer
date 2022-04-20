@@ -26,17 +26,16 @@ func (s *Sphere) Intersect(r *Ray) Intersections {
 	or := r.Transform(s.GetInverseTransform())
 	str := or.Origin.Sub(alg.Origin)
 	a := or.Direction.Dot(or.Direction)
-	b := 2 * or.Direction.Dot(str)
+	b := or.Direction.Dot(str)
 	c := str.Dot(str) - 1
-	d := b*b - 4*a*c
+	d := b*b - a*c
 	if d < 0 {
 		return NewIntersections()
 	}
 	ds := math.Sqrt(d)
-	a2 := 2 * a
 	return NewIntersections(
-		NewIntersection((-b-ds)/a2, s),
-		NewIntersection((-b+ds)/a2, s),
+		NewIntersection((-b-ds)/a, s),
+		NewIntersection((-b+ds)/a, s),
 	)
 }
 

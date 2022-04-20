@@ -32,20 +32,17 @@ func (s *Cylinder) Intersect(r *Ray) Intersections {
 	}
 	xo := r2.Origin[0]
 	zo := r2.Origin[2]
-	b := 2 * (xo*xd + zo*zd)
+	b := xo*xd + zo*zd
 	c := xo*xo + zo*zo - 1
-	d := b*b - 4*a*c
+	d := b*b - a*c
 	if d < 0 {
 		return NewIntersections()
 	}
 	ds := math.Sqrt(d)
-	a2 := 2 * a
-	t0 := (-b - ds) / a2
-	t1 := (-b + ds) / a2
+	t0 := (-b - ds) / a
+	t1 := (-b + ds) / a
 	if t0 > t1 {
-		t := t1
-		t1 = t0
-		t0 = t
+		t0, t1 = t1, t0
 	}
 	yo := r2.Origin[1]
 	yd := r2.Direction[1]
