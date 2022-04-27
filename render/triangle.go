@@ -1,6 +1,10 @@
 package render
 
-import "github.com/mhoertnagl/gracer/alg"
+import (
+	"math"
+
+	"github.com/mhoertnagl/gracer/alg"
+)
 
 type Triangle struct {
 	P1           alg.Vector
@@ -34,8 +38,27 @@ func NewTriangle(p1, p2, p3 alg.Vector) *Triangle {
 }
 
 func (t *Triangle) Intersect(r *Ray) Intersections {
+	dirCrossE2 := r.Direction.Cross(t.E2)
+	det := t.E1.Dot(dirCrossE2)
+	if math.Abs(det) < EPSILON {
+		return NewIntersections()
+	}
+	f := 1.0 / det
+	p1ToOrigin := r.Origin.Sub(t.P1)
+	u := f * p1ToOrigin.Dot(dirCrossE2)
+	if u < 0 || u > 1 {
+		return NewIntersections()
+	}
+	origCrossE1 := p1ToOrigin.Cross(t.E1)
+	v := f * r.Direction.Dot(origCrossE1)
+	if v < 0 || (u+v) > 1 {
+		return NewIntersections()
+	}
+	w := f * t.E2.Dot(origCrossE1)
 	// or := r.Transform(alg.Inverse(t.Transform))
-	return NewIntersections()
+	return NewIntersections(
+		NewIntersection(w, t),
+	)
 }
 
 func (t *Triangle) NormalAt(point alg.Vector) alg.Vector {
