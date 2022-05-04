@@ -16,6 +16,7 @@ import (
 type Parser struct {
 	Vertices []*vertexContainer
 	Root     *render.Group
+	group    *render.Group
 }
 
 type vertexContainer struct {
@@ -23,9 +24,11 @@ type vertexContainer struct {
 }
 
 func NewParser() *Parser {
+	group := render.NewGroup()
 	return &Parser{
 		Vertices: make([]*vertexContainer, 0),
-		Root:     render.NewGroup(),
+		Root:     group,
+		group:    group,
 	}
 }
 
@@ -44,6 +47,11 @@ func (p *Parser) ParseString(text string) {
 }
 
 func (p *Parser) ParseReader(r io.Reader) {
+	group := render.NewGroup()
+	p.Vertices = make([]*vertexContainer, 0)
+	p.Root = group
+	p.group = group
+
 	sc := bufio.NewScanner(r)
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
@@ -64,6 +72,8 @@ func (p *Parser) parseLine(line string) {
 		p.parseVertex(line)
 	case "f":
 		p.parseFace(line)
+	case "g":
+		p.parseGroup(line)
 	}
 }
 
@@ -84,7 +94,7 @@ func (p *Parser) parseFace(line string) {
 		v2 := p.getVertex(vs[i])
 		v3 := p.getVertex(vs[i+1])
 		tr := render.NewTriangle(v1, v2, v3)
-		p.Root.AddKid(tr)
+		p.group.AddKid(tr)
 	}
 }
 
@@ -99,6 +109,11 @@ func parseIntList(list string) []int {
 		}
 	}
 	return ints
+}
+
+func (p *Parser) parseGroup(line string) {
+	p.group = render.NewGroup()
+	p.Root.AddKid(p.group)
 }
 
 // Index is 1-based!

@@ -22,13 +22,18 @@ func NewGroup() *Group {
 	}
 }
 
+// func (g *Group) Intersect(r *Ray) Intersections {
+// 	rg := r.Transform(g.GetTransform())
+// 	if g.GetBounds().Intersect(rg) {
+// 		r2 := r.Transform(g.GetInverseTransform())
+// 		return IntersectCollection(g.Kids, r2)
+// 	}
+// 	return NewIntersections()
+// }
+
 func (g *Group) Intersect(r *Ray) Intersections {
-	rg := r.Transform(g.GetTransform())
-	if g.GetBounds().Intersect(rg) {
-		r2 := r.Transform(g.GetInverseTransform())
-		return IntersectCollection(g.Kids, r2)
-	}
-	return NewIntersections()
+	r2 := r.Transform(g.GetInverseTransform())
+	return IntersectCollection(g.Kids, r2)
 }
 
 func (g *Group) NormalAt(p alg.Vector) alg.Vector {
