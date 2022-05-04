@@ -45,7 +45,7 @@ func Min3(a, b, c Vector) Vector {
 // MaxN returns the component-wise maximum vector of vectors as.
 func MaxN(as ...Vector) Vector {
 	if len(as) == 0 {
-		return NewZeroVector(0)
+		return NewZeroVector(4)
 	}
 	size := len(as[0])
 	max := NewValueVector(size, -math.MaxFloat64)
@@ -60,7 +60,7 @@ func MaxN(as ...Vector) Vector {
 // MinN returns the component-wise minimum vector of vectors as
 func MinN(as ...Vector) Vector {
 	if len(as) == 0 {
-		return NewZeroVector(0)
+		return NewZeroVector(4)
 	}
 	size := len(as[0])
 	min := NewValueVector(size, math.MaxFloat64)

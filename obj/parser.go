@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/mhoertnagl/gracer/alg"
@@ -77,15 +78,27 @@ func (p *Parser) parseVertex(line string) {
 }
 
 func (p *Parser) parseFace(line string) {
-	var f1 int
-	var f2 int
-	var f3 int
-	fmt.Sscanf(line, "f %d %d %d", &f1, &f2, &f3)
-	v1 := p.getVertex(f1)
-	v2 := p.getVertex(f2)
-	v3 := p.getVertex(f3)
-	tr := render.NewTriangle(v1, v2, v3)
-	p.Root.AddKid(tr)
+	vs := parseIntList(line[2:])
+	v1 := p.getVertex(vs[0])
+	for i := 1; i < len(vs)-1; i++ {
+		v2 := p.getVertex(vs[i])
+		v3 := p.getVertex(vs[i+1])
+		tr := render.NewTriangle(v1, v2, v3)
+		p.Root.AddKid(tr)
+	}
+}
+
+func parseIntList(list string) []int {
+	parts := strings.Split(list, " ")
+	ints := make([]int, len(parts))
+	for i := 0; i < len(ints); i++ {
+		if v, err := strconv.Atoi(parts[i]); err == nil {
+			ints[i] = v
+		} else {
+			panic(err)
+		}
+	}
+	return ints
 }
 
 // Index is 1-based!

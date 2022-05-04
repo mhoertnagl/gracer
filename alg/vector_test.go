@@ -60,9 +60,9 @@ func TestVectorDotProduct(t *testing.T) {
 }
 
 func TestCrossProduct(t *testing.T) {
-	e := NewVector(1, -2, 1)
-	x := NewVector(1, 2, 3)
-	y := NewVector(2, 3, 4)
+	e := NewVector3(1, -2, 1)
+	x := NewVector3(1, 2, 3)
+	y := NewVector3(2, 3, 4)
 	a := y.Cross(x)
 	AssertVectorEqual(t, a, e)
 }

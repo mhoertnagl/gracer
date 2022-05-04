@@ -55,7 +55,6 @@ func (t *Triangle) Intersect(r *Ray) Intersections {
 		return NewIntersections()
 	}
 	w := f * t.E2.Dot(origCrossE1)
-	// or := r.Transform(alg.Inverse(t.Transform))
 	return NewIntersections(
 		NewIntersection(w, t),
 	)

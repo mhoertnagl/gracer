@@ -51,3 +51,26 @@ func TestTriangleFaces(t *testing.T) {
 	AssertVectorEqual(t, p.getTriangle(1).P2, p.getVertex(3))
 	AssertVectorEqual(t, p.getTriangle(1).P3, p.getVertex(4))
 }
+
+func TestTriangulatingPolygons(t *testing.T) {
+	p := NewParser()
+	p.ParseString(`
+		v -1 1 0
+		v -1 0 0
+		v 1 0 0
+		v 1 1 0
+		v 0 2 0
+
+		f 1 2 3 4 5
+	`)
+	AssertIntEqual(t, len(p.Root.Kids), 3)
+	AssertVectorEqual(t, p.getTriangle(0).P1, p.getVertex(1))
+	AssertVectorEqual(t, p.getTriangle(0).P2, p.getVertex(2))
+	AssertVectorEqual(t, p.getTriangle(0).P3, p.getVertex(3))
+	AssertVectorEqual(t, p.getTriangle(1).P1, p.getVertex(1))
+	AssertVectorEqual(t, p.getTriangle(1).P2, p.getVertex(3))
+	AssertVectorEqual(t, p.getTriangle(1).P3, p.getVertex(4))
+	AssertVectorEqual(t, p.getTriangle(2).P1, p.getVertex(1))
+	AssertVectorEqual(t, p.getTriangle(2).P2, p.getVertex(4))
+	AssertVectorEqual(t, p.getTriangle(2).P3, p.getVertex(5))
+}
