@@ -43,6 +43,6 @@ func TestFindingTheNormalOnAChildObject(t *testing.T) {
 	s := NewSphere()
 	s.Transform = alg.Translation(5, 0, 0)
 	g2.AddKid(s)
-	n := s.NormalAt(alg.NewPoint(1.7321, 1.1547, -5.5774))
+	n := s.NormalAt(alg.NewPoint(1.7321, 1.1547, -5.5774), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(0.285704, 0.428543, -0.857161))
 }

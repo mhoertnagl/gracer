@@ -21,26 +21,26 @@ func TestChangingASpheresDefaultTransformation(t *testing.T) {
 
 func TestTheNormalOnASphereAtAPointOnTheXAxis(t *testing.T) {
 	s := NewSphere()
-	n := s.NormalAt(alg.NewPoint(1, 0, 0))
+	n := s.NormalAt(alg.NewPoint(1, 0, 0), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(1, 0, 0))
 }
 
 func TestTheNormalOnASphereAtAPointOnTheYAxis(t *testing.T) {
 	s := NewSphere()
-	n := s.NormalAt(alg.NewPoint(0, 1, 0))
+	n := s.NormalAt(alg.NewPoint(0, 1, 0), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(0, 1, 0))
 }
 
 func TestTheNormalOnASphereAtAPointOnTheZAxis(t *testing.T) {
 	s := NewSphere()
-	n := s.NormalAt(alg.NewPoint(0, 0, 1))
+	n := s.NormalAt(alg.NewPoint(0, 0, 1), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(0, 0, 1))
 }
 
 func TestTheNormalOnASphereAtANonaxialPoint(t *testing.T) {
 	f := math.Sqrt(3) / 3
 	s := NewSphere()
-	n := s.NormalAt(alg.NewPoint(f, f, f))
+	n := s.NormalAt(alg.NewPoint(f, f, f), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(f, f, f))
 	AssertVectorEqual(t, n, n.Norm())
 }
@@ -48,7 +48,7 @@ func TestTheNormalOnASphereAtANonaxialPoint(t *testing.T) {
 func TestComputingTheNormalOnATranslatedSphere(t *testing.T) {
 	s := NewSphere()
 	s.Transform = alg.Translation(0, 1, 0)
-	n := s.NormalAt(alg.NewPoint(0, 1.70711, -0.70711))
+	n := s.NormalAt(alg.NewPoint(0, 1.70711, -0.70711), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(0, 0.70711, -0.70711))
 }
 
@@ -56,7 +56,7 @@ func TestComputingTheNormalOnATransformedSphere(t *testing.T) {
 	f := math.Sqrt(2) / 2
 	s := NewSphere()
 	s.Transform = alg.Id4.Scale(1, 0.5, 1)
-	n := s.NormalAt(alg.NewPoint(0, f, -f))
+	n := s.NormalAt(alg.NewPoint(0, f, -f), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(0, 0.97014, -0.24254))
 }
 
@@ -64,6 +64,6 @@ func TestComputingTheNormalOnATransformedSphere2(t *testing.T) {
 	f := math.Sqrt(2) / 2
 	s := NewSphere()
 	s.Transform = alg.Id4.Scale(1, 0.5, 1).RotateZ(math.Pi / 5)
-	n := s.NormalAt(alg.NewPoint(0, f, -f))
+	n := s.NormalAt(alg.NewPoint(0, f, -f), nil)
 	AssertVectorEqual(t, n, alg.NewVector3(-0.41499, 0.86207, -0.29089))
 }

@@ -6,30 +6,33 @@ import (
 	"github.com/mhoertnagl/gracer/alg"
 )
 
-type Triangle struct {
+type SmoothTriangle struct {
 	P1           alg.Vector
 	P2           alg.Vector
 	P3           alg.Vector
 	E1           alg.Vector
 	E2           alg.Vector
-	Normal       alg.Vector
+	N1           alg.Vector
+	N2           alg.Vector
+	N3           alg.Vector
 	Transform    alg.Matrix
 	Material     *Material
 	Parent       Object
 	invTransform alg.Matrix
 }
 
-func NewTriangle(p1, p2, p3 alg.Vector) *Triangle {
+func NewSmoothTriangle(p1, p2, p3, n1, n2, n3 alg.Vector) *SmoothTriangle {
 	e1 := p2.Sub(p1)
 	e2 := p3.Sub(p1)
-	n := e2.Cross(e1).Norm()
-	return &Triangle{
+	return &SmoothTriangle{
 		P1:           p1,
 		P2:           p2,
 		P3:           p3,
 		E1:           e1,
 		E2:           e2,
-		Normal:       n,
+		N1:           n1,
+		N2:           n2,
+		N3:           n3,
 		Transform:    alg.Id4,
 		Material:     NewMaterial(),
 		Parent:       nil,
@@ -37,7 +40,7 @@ func NewTriangle(p1, p2, p3 alg.Vector) *Triangle {
 	}
 }
 
-func (t *Triangle) Intersect(r *Ray) Intersections {
+func (t *SmoothTriangle) Intersect(r *Ray) Intersections {
 	dirCrossE2 := r.Direction.Cross(t.E2)
 	det := t.E1.Dot(dirCrossE2)
 	if math.Abs(det) < EPSILON {
@@ -56,44 +59,47 @@ func (t *Triangle) Intersect(r *Ray) Intersections {
 	}
 	w := f * t.E2.Dot(origCrossE1)
 	return NewIntersections(
-		NewIntersection(w, t),
+		NewIntersectionWithUV(w, t, u, v),
 	)
 }
 
-func (t *Triangle) NormalAt(point alg.Vector, hit *Intersection) alg.Vector {
+func (t *SmoothTriangle) NormalAt(point alg.Vector, hit *Intersection) alg.Vector {
 	op := worldToObject(t, point)
-	on := t.localNormalAt(op)
+	on := t.localNormalAt(op, hit)
 	return normalToWorld(t, on)
 }
 
-func (t *Triangle) localNormalAt(point alg.Vector) alg.Vector {
-	return t.Normal
+func (t *SmoothTriangle) localNormalAt(point alg.Vector, hit *Intersection) alg.Vector {
+	n1 := t.N1.Mult(1 - hit.U - hit.V)
+	n2 := t.N2.Mult(hit.U)
+	n3 := t.N3.Mult(hit.V)
+	return n1.Add(n2).Add(n3)
 }
 
-func (t *Triangle) GetMaterial() *Material {
+func (t *SmoothTriangle) GetMaterial() *Material {
 	return t.Material
 }
 
-func (t *Triangle) GetTransform() alg.Matrix {
+func (t *SmoothTriangle) GetTransform() alg.Matrix {
 	return t.Transform
 }
 
-func (t *Triangle) SetParent(obj Object) {
+func (t *SmoothTriangle) SetParent(obj Object) {
 	t.Parent = obj
 }
 
-func (t *Triangle) GetParent() Object {
+func (t *SmoothTriangle) GetParent() Object {
 	return t.Parent
 }
 
-func (t *Triangle) GetInverseTransform() alg.Matrix {
+func (t *SmoothTriangle) GetInverseTransform() alg.Matrix {
 	if t.invTransform == nil {
 		t.invTransform = alg.Inverse(t.Transform)
 	}
 	return t.invTransform
 }
 
-func (t *Triangle) GetBounds() *Bounds {
+func (t *SmoothTriangle) GetBounds() *Bounds {
 	min := alg.Min3(t.P1, t.P2, t.P3)
 	max := alg.Max3(t.P1, t.P2, t.P3)
 	return NewBounds(min, max)

@@ -68,7 +68,7 @@ func inft(num float64) float64 {
 	return -math.MaxFloat64
 }
 
-func (c *Cube) NormalAt(p alg.Vector) alg.Vector {
+func (c *Cube) NormalAt(p alg.Vector, hit *Intersection) alg.Vector {
 	op := worldToObject(c, p)
 	on := c.localNormalAt(op)
 	return normalToWorld(c, on)

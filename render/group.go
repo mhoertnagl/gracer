@@ -36,7 +36,7 @@ func (g *Group) Intersect(r *Ray) Intersections {
 	return IntersectCollection(g.Kids, r2)
 }
 
-func (g *Group) NormalAt(p alg.Vector) alg.Vector {
+func (g *Group) NormalAt(p alg.Vector, hit *Intersection) alg.Vector {
 	panic("Groups don't have normal vectors")
 }
 

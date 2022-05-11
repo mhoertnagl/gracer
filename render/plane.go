@@ -32,7 +32,7 @@ func (p *Plane) Intersect(r *Ray) Intersections {
 	)
 }
 
-func (p *Plane) NormalAt(point alg.Vector) alg.Vector {
+func (p *Plane) NormalAt(point alg.Vector, hit *Intersection) alg.Vector {
 	op := worldToObject(p, point)
 	on := p.localNormalAt(op)
 	return normalToWorld(p, on)

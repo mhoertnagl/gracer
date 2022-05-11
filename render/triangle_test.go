@@ -24,9 +24,9 @@ func TestFindingTheNormalOnATriangle(t *testing.T) {
 	p2 := alg.NewPoint(-1, 0, 0)
 	p3 := alg.NewPoint(1, 0, 0)
 	tr := NewTriangle(p1, p2, p3)
-	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(0, 0.5, 0)))
-	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(-0.5, 0.75, 0)))
-	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(0.5, 0.25, 0)))
+	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(0, 0.5, 0), nil))
+	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(-0.5, 0.75, 0), nil))
+	AssertVectorEqual(t, tr.Normal, tr.NormalAt(alg.NewPoint(0.5, 0.25, 0), nil))
 }
 
 func TestIntersectRayParallelToTriangle(t *testing.T) {

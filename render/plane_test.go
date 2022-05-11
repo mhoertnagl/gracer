@@ -8,9 +8,9 @@ import (
 
 func TestTheNormalVectorOfAPlane(t *testing.T) {
 	p := NewPlane()
-	AssertVectorEqual(t, p.NormalAt(alg.Origin), alg.NewVector3(0, 1, 0))
-	AssertVectorEqual(t, p.NormalAt(alg.NewPoint(10, 0, -10)), alg.NewVector3(0, 1, 0))
-	AssertVectorEqual(t, p.NormalAt(alg.NewPoint(-5, 0, 150)), alg.NewVector3(0, 1, 0))
+	AssertVectorEqual(t, p.NormalAt(alg.Origin, nil), alg.NewVector3(0, 1, 0))
+	AssertVectorEqual(t, p.NormalAt(alg.NewPoint(10, 0, -10), nil), alg.NewVector3(0, 1, 0))
+	AssertVectorEqual(t, p.NormalAt(alg.NewPoint(-5, 0, 150), nil), alg.NewVector3(0, 1, 0))
 }
 
 func TestIntersectRayParallelToPlane(t *testing.T) {

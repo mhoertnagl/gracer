@@ -8,7 +8,7 @@ import (
 
 type Object interface {
 	Intersect(r *Ray) Intersections
-	NormalAt(p alg.Vector) alg.Vector
+	NormalAt(p alg.Vector, hit *Intersection) alg.Vector
 	GetMaterial() *Material
 	GetTransform() alg.Matrix
 	GetInverseTransform() alg.Matrix
@@ -18,18 +18,6 @@ type Object interface {
 }
 
 // TODO: Add another interface Shape that inherits from Object with GetMaterial().
-
-// type Object interface {
-// 	Intersect(r *Ray) Intersections
-// 	NormalAt(p alg.Vector) alg.Vector
-// 	// GetMaterial() *Material
-// 	GetTransform() alg.Matrix
-// }
-
-// type Shape interface {
-// 	Object
-// 	GetMaterial() *Material
-// }
 
 func worldToObject(obj Object, point alg.Vector) alg.Vector {
 	if parent := obj.GetParent(); parent != nil {

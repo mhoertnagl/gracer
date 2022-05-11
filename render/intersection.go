@@ -11,10 +11,16 @@ import (
 type Intersection struct {
 	Distance float64
 	Object   Object
+	U        float64
+	V        float64
 }
 
 func NewIntersection(distance float64, object Object) *Intersection {
 	return &Intersection{Distance: distance, Object: object}
+}
+
+func NewIntersectionWithUV(distance float64, object Object, u, v float64) *Intersection {
+	return &Intersection{Distance: distance, Object: object, U: u, V: v}
 }
 
 type Intersections []*Intersection
@@ -54,7 +60,7 @@ func prepareComps(hit *Intersection, r *Ray, xs Intersections) *comps {
 	c.Object = hit.Object
 	c.Point = r.Position(hit.Distance)
 	c.Eye = r.Direction.Neg()
-	c.Normal = hit.Object.NormalAt(c.Point)
+	c.Normal = hit.Object.NormalAt(c.Point, hit)
 	if c.Normal.Dot(c.Eye) < 0 {
 		c.Inside = true
 		c.Normal = c.Normal.Neg()

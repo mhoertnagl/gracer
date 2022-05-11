@@ -57,6 +57,6 @@ func TestTheNormalOnACylinder(t *testing.T) {
 		{p: alg.NewPoint(-1, 1, 0), n: alg.NewVector3(-1, 0, 0)},
 	}
 	for _, e := range ex {
-		AssertVectorEqual(t, c.NormalAt(e.p), e.n)
+		AssertVectorEqual(t, c.NormalAt(e.p, nil), e.n)
 	}
 }

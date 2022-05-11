@@ -74,7 +74,7 @@ func checkCaps(r *Ray, t float64) bool {
 	return x*x+z*z <= 1
 }
 
-func (c *Cylinder) NormalAt(p alg.Vector) alg.Vector {
+func (c *Cylinder) NormalAt(p alg.Vector, hit *Intersection) alg.Vector {
 	op := worldToObject(c, p)
 	on := c.localNormalAt(op)
 	return normalToWorld(c, on)
