@@ -33,7 +33,7 @@ func main() {
 		MultMat(alg.RotationX(math.Pi / 2))
 
 	parser := obj.NewParser()
-	parser.ParseFile("./models/teapot_n_glass.obj")
+	parser.ParseFile("./assets/models/teapot_n_glass.obj")
 	teapot := parser.Root
 	for _, v := range teapot.Kids {
 		v.GetMaterial().Ambient = 0.2
@@ -166,9 +166,9 @@ func main() {
 	// world.AddObject(left)
 	// world.AddObject(cyl)
 
-	// camera := render.NewCamera(300, 300, math.Pi/3)
+	camera := render.NewCamera(300, 300, math.Pi/3)
 	// camera := render.NewCamera(600, 600, math.Pi/3)
-	camera := render.NewCamera(1200, 1200, math.Pi/3)
+	// camera := render.NewCamera(1200, 1200, math.Pi/3)
 	camera.Transform = render.ViewTransform(
 		alg.NewPoint(20, 4, 0),
 		alg.NewPoint(0, 0, 0),
