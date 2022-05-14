@@ -15,6 +15,7 @@ type Object interface {
 	SetParent(obj Object)
 	GetParent() Object
 	GetBounds() *Bounds
+	Includes(obj Object) bool
 }
 
 // TODO: Add another interface Shape that inherits from Object with GetMaterial().

@@ -70,3 +70,7 @@ func (p *Plane) GetBounds() *Bounds {
 	max := alg.NewPoint(math.MaxFloat64, 0, math.MaxFloat64)
 	return NewBounds(min, max)
 }
+
+func (p *Plane) Includes(obj Object) bool {
+	return p == obj
+}

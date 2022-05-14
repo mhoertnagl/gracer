@@ -22,6 +22,7 @@ func NewGroup() *Group {
 	}
 }
 
+// TODO: AABB improvement fails.
 // func (g *Group) Intersect(r *Ray) Intersections {
 // 	rg := r.Transform(g.GetTransform())
 // 	if g.GetBounds().Intersect(rg) {
@@ -82,4 +83,13 @@ func computeBounds(g *Group) *Bounds {
 		edges = append(edges, bounds.Edges()...)
 	}
 	return NewBoundsFrom(edges...)
+}
+
+func (g *Group) Includes(obj Object) bool {
+	for _, kid := range g.Kids {
+		if kid.Includes(obj) {
+			return true
+		}
+	}
+	return false
 }

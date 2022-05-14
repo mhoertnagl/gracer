@@ -38,19 +38,21 @@ func NewTriangle(p1, p2, p3 alg.Vector) *Triangle {
 }
 
 func (t *Triangle) Intersect(r *Ray) Intersections {
-	dirCrossE2 := r.Direction.Cross(t.E2)
+	// TODO: Pass transformed ray.
+	or := r.Transform(t.GetInverseTransform())
+	dirCrossE2 := or.Direction.Cross(t.E2)
 	det := t.E1.Dot(dirCrossE2)
 	if math.Abs(det) < EPSILON {
 		return NewIntersections()
 	}
 	f := 1.0 / det
-	p1ToOrigin := r.Origin.Sub(t.P1)
+	p1ToOrigin := or.Origin.Sub(t.P1)
 	u := f * p1ToOrigin.Dot(dirCrossE2)
 	if u < 0 || u > 1 {
 		return NewIntersections()
 	}
 	origCrossE1 := p1ToOrigin.Cross(t.E1)
-	v := f * r.Direction.Dot(origCrossE1)
+	v := f * or.Direction.Dot(origCrossE1)
 	if v < 0 || (u+v) > 1 {
 		return NewIntersections()
 	}
@@ -97,4 +99,8 @@ func (t *Triangle) GetBounds() *Bounds {
 	min := alg.Min3(t.P1, t.P2, t.P3)
 	max := alg.Max3(t.P1, t.P2, t.P3)
 	return NewBounds(min, max)
+}
+
+func (t *Triangle) Includes(obj Object) bool {
+	return t == obj
 }

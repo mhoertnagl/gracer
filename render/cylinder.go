@@ -117,3 +117,7 @@ func (c *Cylinder) GetInverseTransform() alg.Matrix {
 func (c *Cylinder) GetBounds() *Bounds {
 	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }
+
+func (c *Cylinder) Includes(obj Object) bool {
+	return c == obj
+}

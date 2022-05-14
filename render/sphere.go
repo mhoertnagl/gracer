@@ -75,3 +75,7 @@ func (s *Sphere) GetInverseTransform() alg.Matrix {
 func (s *Sphere) GetBounds() *Bounds {
 	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }
+
+func (s *Sphere) Includes(obj Object) bool {
+	return s == obj
+}

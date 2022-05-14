@@ -114,3 +114,7 @@ func (c *Cube) GetInverseTransform() alg.Matrix {
 func (c *Cube) GetBounds() *Bounds {
 	return NewBounds(alg.NewPoint(-1, -1, -1), alg.NewPoint(1, 1, 1))
 }
+
+func (c *Cube) Includes(obj Object) bool {
+	return c == obj
+}
